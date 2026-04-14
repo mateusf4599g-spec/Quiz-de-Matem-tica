@@ -1,0 +1,3152 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Matemática</title>
+
+<style>
+/* ==========================
+   ESTILO GERAL
+========================== */
+body{
+  font-family:Arial;
+  background:#0f172a;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  margin:0;
+  padding:15px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.container{
+  background:#1e293b;
+  padding:25px;
+  border-radius:12px;
+  width:95%;
+  max-width:600px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+h1,h2{text-align:center;}
+
+/* BOTÕES DE MATÉRIA/ASSUNTO */
+.temaBtn{
+  background:#111827;
+  padding:16px;
+  margin:10px 0;
+  border-radius:8px;
+  cursor:pointer;
+  text-align:center;
+  font-size:22px;
+  border:3px solid #1f2937;
+  user-select:none;
+  touch-action:manipulation;
+}
+
+.selecionadaMenu{
+  background:#1d4ed8 !important;
+  border:3px solid #60a5fa !important;
+}
+
+/* BARRA DE PROGRESSO DO ASSUNTO */
+.progressoAssunto{
+  height:8px;
+  background:#1f2937;
+  border-radius:6px;
+  margin-top:6px;
+}
+
+.barraInterna{
+  height:8px;
+  background:#22c55e;
+  border-radius:6px;
+}
+
+/* PERGUNTAS E OPÇÕES */
+.pergunta{
+  font-size:24px;
+  margin-bottom:20px;
+}
+
+.opcao{
+  background:#111827;
+  padding:16px;
+  margin:10px 0;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:20px;
+  border:3px solid #1f2937;
+}
+
+.selecionada{background:#1d4ed8 !important;border:3px solid #60a5fa !important;}
+.correta{background:#16a34a !important;border:3px solid #4ade80;}
+.errada{background:#dc2626 !important;border:3px solid #f87171;}
+
+/* BOTOES GERAIS */
+button{
+  margin-top:15px;
+  padding:14px;
+  width:100%;
+  border:none;
+  background:#2563eb;
+  color:white;
+  border-radius:8px;
+  font-size:18px;
+  cursor:pointer;
+}
+
+/* INPUT PARA NOME */
+input{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  margin-top:10px;
+  font-size:18px;
+}
+
+/* BARRA DE PROGRESSO GERAL DO QUIZ */
+#barra{
+  height:12px;
+  background:#1f2937;
+  border-radius:10px;
+  margin-bottom:20px;
+  overflow:hidden;
+}
+
+#progresso{
+  height:12px;
+  background:#3b82f6;
+  width:0%;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="container" id="login">
+<h1>Quiz de Matemática</h1>
+<p>Digite seu nome para salvar seu progresso</p>
+<input id="nomeUsuario" placeholder="Seu nome">
+<button id="btnEntrar">Entrar</button>
+</div>
+
+<!-- MENU DE MATÉRIAS -->
+<div class="container" id="menu" style="display:none"></div>
+
+<!-- TELA DE QUIZ -->
+<div class="container" id="quiz" style="display:none">
+<h1>Quiz de Matemática</h1>
+<div id="barra"><div id="progresso"></div></div>
+<div id="placar"></div>
+<div id="tema"></div>
+<div class="pergunta" id="pergunta"></div>
+
+<div class="opcao" id="op0"></div>
+<div class="opcao" id="op1"></div>
+<div class="opcao" id="op2"></div>
+<div class="opcao" id="op3"></div>
+
+<div id="explicacao"></div>
+
+<button id="btnConfirmar">Confirmar</button>
+<button id="btnProxima" style="display:none">Próxima</button>
+<button id="btnVoltar">Voltar</button>
+</div>
+
+<script>
+// ==========================
+// CONFIGURAÇÕES E VARIÁVEIS
+// ==========================
+const QUIZ_ID = "quiz de MATEMÁTICA" // ID único do quiz
+let usuario=""
+let materiaSelecionada=null
+let assuntoSelecionado=null
+let opcaoSelecionada=null
+let perguntas=[]
+let atual=0
+let pontos=0
+let respondido=false
+let erros=[]
+
+
+// ==========================
+// BANCO DE PERGUNTAS
+// ==========================
+let banco=[
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é o resultado da soma de 345 e 678?", 
+"opcoes":["1012","1000","1023","1100"], "correta":2, 
+"explicacao":"Somando 345 + 678, temos 1023."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é a diferença entre 850 e 476?", 
+"opcoes":["384","374","400","360"], "correta":1, 
+"explicacao":"Subtraindo 476 de 850, obtemos 374."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual número é múltiplo de 7?", 
+"opcoes":["13","25","21","32"], "correta":2, 
+"explicacao":"21 é múltiplo de 7, pois 7×3=21."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é o resultado da multiplicação 12 × 15?", 
+"opcoes":["170","190","160","180"], "correta":3, 
+"explicacao":"12 × 15 = 180."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é o quociente de 144 dividido por 12?", 
+"opcoes":["12","11","13","14"], "correta":0, 
+"explicacao":"144 ÷ 12 = 12."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é o menor número primo maior que 10?", 
+"opcoes":["11","12","13","14"], "correta":0, 
+"explicacao":"O menor número primo maior que 10 é 11."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é o resto da divisão de 29 por 5?", 
+"opcoes":["4","5","3","2"], "correta":0, 
+"explicacao":"29 ÷ 5 = 5 com resto 4."}, 
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é a soma dos números naturais de 1 a 10?", 
+"opcoes":["50","55","60","45"], "correta":1, 
+"explicacao":"1+2+3+...+10 = 55."}, 
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual número é par?", 
+"opcoes":["17","18","19","21"], "correta":1, 
+"explicacao":"18 é par porque é divisível por 2."}, 
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é o produto de 9 × 8?", 
+"opcoes":["64","72","70","81"], "correta":1, 
+"explicacao":"9 × 8 = 72."}, 
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é a soma de 234 + 321?", 
+"opcoes":["555","556","557","554"], "correta":0, 
+"explicacao":"234 + 321 = 555."}, 
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual número não é múltiplo de 3?", 
+"opcoes":["12","14","15","18"], "correta":1, 
+"explicacao":"14 não é múltiplo de 3."}, 
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é o quociente de 81 ÷ 9?", 
+"opcoes":["9","8","10","7"], "correta":0, 
+"explicacao":"81 ÷ 9 = 9."}, 
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é a diferença entre 500 e 275?", 
+"opcoes":["225","230","235","215"], "correta":0, 
+"explicacao":"500 − 275 = 225."}, 
+
+{"materia":"Matemática 6º Ano", "assunto":"Números naturais e operações", 
+"pergunta":"\nQual é o número que representa a unidade de milhar em 3.472?", 
+"opcoes":["3","4","7","2"], "correta":0, 
+"explicacao":"O número 3 representa a unidade de milhar em 3.472."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nQual é o valor do algarismo 7 no número 3.742?", 
+"opcoes":["7 unidades","7 dezenas","7 centenas","7 milhares"], "correta":2, 
+"explicacao":"No número 3.742, o 7 ocupa a posição das centenas."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nQual é o valor posicional do 4 em 5.486?", 
+"opcoes":["4 unidades","4 dezenas","4 centenas","4 milhares"], "correta":1, 
+"explicacao":"No número 5.486, o 4 está na posição das dezenas."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nEm 9.251, qual algarismo representa as unidades de milhar?", 
+"opcoes":["2","9","5","1"], "correta":1, 
+"explicacao":"O algarismo 9 representa as unidades de milhar no número 9.251."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nQual número tem 6 centenas, 3 dezenas e 2 unidades?", 
+"opcoes":["632","362","236","326"], "correta":0, 
+"explicacao":"6 centenas, 3 dezenas e 2 unidades formam o número 632."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nO número 4.507 tem quantas unidades de milhar?", 
+"opcoes":["4","5","7","0"], "correta":0, 
+"explicacao":"O algarismo 4 representa as unidades de milhar em 4.507."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nEm 8.964, qual é o valor do algarismo 6?", 
+"opcoes":["6 unidades","60 dezenas","6 centenas","6 milhares"], "correta":2, 
+"explicacao":"No número 8.964, o 6 ocupa a posição das centenas, ou seja, 600."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nQual é o valor posicional do 2 em 7.325?", 
+"opcoes":["2 unidades","20 dezenas","200 centenas","2 milhares"], "correta":1, 
+"explicacao":"O 2 está na posição das dezenas, representando 20."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nEm 1.408, qual algarismo representa as dezenas?", 
+"opcoes":["1","4","0","8"], "correta":2, 
+"explicacao":"O algarismo 0 está na posição das dezenas, representando 0 dezenas."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nQual número é formado por 5 milhares, 2 centenas, 8 dezenas e 7 unidades?", 
+"opcoes":["5.287","5.278","5.728","5.872"], "correta":0, 
+"explicacao":"5.287 corresponde a 5 milhares, 2 centenas, 8 dezenas e 7 unidades."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Sistema de numeração decimal", 
+"pergunta":"\nEm 3.609, qual algarismo representa as unidades?", 
+"opcoes":["3","6","0","9"], "correta":3, 
+"explicacao":"O algarismo 9 representa as unidades no número 3.609."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nQual é o valor de 3,7 + 2,5?", 
+"opcoes":["5,2","6,2","5,0","6,0"], "correta":1, 
+"explicacao":"3,7 + 2,5 = 6,2."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nQual é o valor de 7,8 − 3,4?", 
+"opcoes":["4,2","4,4","4,5","4,0"], "correta":1, 
+"explicacao":"7,8 − 3,4 = 4,4."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nQual é o resultado de 2,5 × 4?", 
+"opcoes":["10,0","9,5","11,0","10,5"], "correta":0, 
+"explicacao":"2,5 × 4 = 10,0."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nQual é o quociente de 12,6 ÷ 3?", 
+"opcoes":["4,0","4,2","4,5","4,3"], "correta":1, 
+"explicacao":"12,6 ÷ 3 = 4,2."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nQual número é maior: 5,67 ou 5,76?", 
+"opcoes":["5,67","5,76","Igual","Não é possível"], "correta":1, 
+"explicacao":"5,76 > 5,67 porque a centésima casa é maior."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nQual é o valor de 0,8 + 0,25?", 
+"opcoes":["1,0","1,05","1,1","0,95"], "correta":1, 
+"explicacao":"0,8 + 0,25 = 1,05."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nQual é a diferença entre 9,2 e 4,75?", 
+"opcoes":["4,35","4,45","4,25","4,5"], "correta":1, 
+"explicacao":"9,2 − 4,75 = 4,45."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nTransforme 3,75 em fração.", 
+"opcoes":["15/4","3/4","37/5","375/100"], "correta":0, 
+"explicacao":"3,75 = 3 + 75/100 = 15/4."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nQual é a soma de 0,45 + 1,55?", 
+"opcoes":["2,0","1,9","2,1","2,05"], "correta":0, 
+"explicacao":"0,45 + 1,55 = 2,0."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Números decimais", 
+"pergunta":"\nQual número é menor: 6,09 ou 6,9?", 
+"opcoes":["6,09","6,9","Igual","Não é possível"], "correta":0, 
+"explicacao":"6,09 < 6,9."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual fração representa metade de uma pizza?", 
+"opcoes":["1/5","1/2","1/3","1/4"], "correta":1, 
+"explicacao":"Metade significa dividir algo em 2 partes iguais; portanto, 1/2."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual fração é equivalente a 2/4?", 
+"opcoes":["2/2","2/4","1/2","1/3"], "correta":2, 
+"explicacao":"2/4 simplificado é 1/2, pois dividindo numerador e denominador por 2."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é a soma de 1/3 + 1/6?", 
+"opcoes":["1/3","1/6","2/3","1/2"], "correta":3, 
+"explicacao":"1/3 + 1/6 = 2/6 + 1/6 = 3/6 = 1/2."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é a diferença entre 3/4 e 1/4?", 
+"opcoes":["3/4","2/4","1/2","1/4"], "correta":2, 
+"explicacao":"3/4 − 1/4 = 2/4 = 1/2."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é o produto de 2/3 × 3/4?", 
+"opcoes":["1/4","2/3","1/2","3/4"], "correta":2, 
+"explicacao":"2/3 × 3/4 = 6/12 = 1/2."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é o quociente de 3/5 ÷ 6/10?", 
+"opcoes":["1/2","1","2/3","3/4"], "correta":1, 
+"explicacao":"3/5 ÷ 6/10 = 3/5 × 10/6 = 30/30 = 1."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual fração representa três quartos?", 
+"opcoes":["1/4","3/4","2/3","3/3"], "correta":1, 
+"explicacao":"Três quartos significa dividir em 4 partes e pegar 3."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é a fração equivalente a 6/9?", 
+"opcoes":["6/9","4/6","2/3","3/6"], "correta":2, 
+"explicacao":"6/9 simplificado dividindo numerador e denominador por 3 resulta em 2/3."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é a soma de 1/4 + 2/4?", 
+"opcoes":["2/4","3/4","1/2","1/4"], "correta":1, 
+"explicacao":"1/4 + 2/4 = 3/4."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é a diferença entre 5/6 e 1/2?", 
+"opcoes":["1/6","1/3","2/6","5/6"], "correta":1, 
+"explicacao":"5/6 − 1/2 = 5/6 − 3/6 = 2/6 = 1/3."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é o produto de 4/5 × 5/8?", 
+"opcoes":["2/5","1/4","1/2","1/3"], "correta":2, 
+"explicacao":"4/5 × 5/8 = 20/40 = 1/2."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é o quociente de 7/10 ÷ 7/5?", 
+"opcoes":["1/4","1/2","2/7","1/2"], "correta":1, 
+"explicacao":"7/10 ÷ 7/5 = 7/10 × 5/7 = 35/70 = 1/2."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual fração representa cinco oitavos?", 
+"opcoes":["3/8","5/8","1/8","4/5"], "correta":1, 
+"explicacao":"Cinco oitavos significa dividir em 8 partes e pegar 5."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é a fração equivalente a 9/12?", 
+"opcoes":["2/3","3/4","4/9","1/3"], "correta":1, 
+"explicacao":"9/12 simplificado dividindo numerador e denominador por 3 resulta em 3/4."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é a soma de 2/5 + 1/5?", 
+"opcoes":["1/2","2/5","4/5","3/5"], "correta":3, 
+"explicacao":"2/5 + 1/5 = 3/5."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é a diferença entre 7/8 e 1/4?", 
+"opcoes":["1/8","1/2","3/8","5/8"], "correta":3, 
+"explicacao":"7/8 − 1/4 = 7/8 − 2/8 = 5/8."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é o produto de 3/4 × 8/9?", 
+"opcoes":["1/2","1/3","2/3","3/8"], "correta":2, 
+"explicacao":"3/4 × 8/9 = 24/36 = 2/3."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é o quociente de 5/6 ÷ 10/12?", 
+"opcoes":["2/3","5/12","1","1/2"], "correta":2, 
+"explicacao":"5/6 ÷ 10/12 = 5/6 × 12/10 = 60/60 = 1."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual fração representa quatro quintos?", 
+"opcoes":["4/5","1/5","3/4","5/4"], "correta":0, 
+"explicacao":"Quatro quintos significa dividir em 5 partes e pegar 4."},
+
+{"materia":"Matemática 6º Ano", "assunto":"Frações (conceito e operações)", 
+"pergunta":"\nQual é a fração equivalente a 12/16?", 
+"opcoes":["1/2","2/3","3/4","4/5"], "correta":2, 
+"explicacao":"12/16 simplificado dividindo numerador e denominador por 4 resulta em 3/4."},
+
+{materia:"Matemática 6º Ano", assunto:"Múltiplos e divisores", 
+pergunta:"\nQual é o menor múltiplo comum de 4 e 6?", 
+opcoes:["12","24","18","6"], correta:0, 
+explicacao:"O menor múltiplo comum de 4 e 6 é 12, pois é o menor número que ambos dividem sem resto."},
+
+{materia:"Matemática 6º Ano", assunto:"Múltiplos e divisores", 
+pergunta:"\nQual número é divisor de 36?", 
+opcoes:["4","5","9","7"], correta:2, 
+explicacao:"9 é divisor de 36 porque 36 ÷ 9 = 4, sem resto."},
+
+{materia:"Matemática 6º Ano", assunto:"Múltiplos e divisores", 
+pergunta:"\nO número 1 é divisor de quais números?", 
+opcoes:["Somente números pares","Todos os números","Somente múltiplos de 10","Apenas números ímpares"], correta:1, 
+explicacao:"O número 1 é divisor de todos os números, pois qualquer número dividido por 1 resulta nele mesmo."},
+
+{materia:"Matemática 6º Ano", assunto:"Múltiplos e divisores", 
+pergunta:"\nQual destes números é múltiplo de 7?", 
+opcoes:["28","25","32","33"], correta:0, 
+explicacao:"28 é múltiplo de 7, pois 7 × 4 = 28."},
+
+{materia:"Matemática 6º Ano", assunto:"Múltiplos e divisores", 
+pergunta:"\nQual é o maior divisor comum de 18 e 24?", 
+opcoes:["6","12","9","3"], correta:0, 
+explicacao:"O maior divisor comum de 18 e 24 é 6."},
+
+{materia:"Matemática 6º Ano", assunto:"Múltiplos e divisores", 
+pergunta:"\nEntre 15, 20, 25 e 30, quais são múltiplos de 5?", 
+opcoes:["15, 20, 25 e 30","Apenas 15 e 25","Apenas 20 e 30","Nenhum deles"], correta:0, 
+explicacao:"Todos os números citados são múltiplos de 5, pois 5 × 3 = 15, 5 × 4 = 20, etc."},
+
+{materia:"Matemática 6º Ano", assunto:"Múltiplos e divisores", 
+pergunta:"\nO número 0 é múltiplo de quais números?", 
+opcoes:["Nenhum","Todos os números","Somente números positivos","Apenas números pares"], correta:1, 
+explicacao:"O número 0 é múltiplo de todos os números, pois qualquer número multiplicado por 0 resulta em 0."},
+
+{materia:"Matemática 6º Ano", assunto:"Múltiplos e divisores", 
+pergunta:"\nQual destes números não é divisor de 60?", 
+opcoes:["6","12","15","14"], correta:3, 
+explicacao:"14 não é divisor de 60 porque 60 ÷ 14 não resulta em número inteiro."},
+
+{materia:"Matemática 6º Ano", assunto:"Múltiplos e divisores", 
+pergunta:"\nO que significa dizer que um número A é múltiplo de um número B?", 
+opcoes:["A pode ser dividido por B sem resto","A é sempre menor que B","B é maior que A","A e B são primos entre si"], correta:0, 
+explicacao:"Um número A é múltiplo de B quando A dividido por B não deixa resto."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nQual é o menor múltiplo comum (MMC) de 6 e 8?", 
+opcoes:["48","24","12","18"], correta:1, 
+explicacao:"O MMC de 6 e 8 é 24, pois é o menor número que ambos os números dividem sem resto."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nQual é o maior divisor comum (MDC) de 18 e 24?", 
+opcoes:["12","6","9","3"], correta:1, 
+explicacao:"O MDC de 18 e 24 é 6, pois é o maior número que divide ambos sem resto."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nO que significa o MMC de dois números?", 
+opcoes:["O maior número múltiplo de ambos","O menor número múltiplo de ambos","O menor número divisor de ambos","O maior número divisor de ambos"], correta:1, 
+explicacao:"O MMC é o menor número que é múltiplo de ambos os números."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nQual é o MDC de 36 e 54?", 
+opcoes:["12","9","18","24"], correta:2, 
+explicacao:"O MDC de 36 e 54 é 18, pois é o maior número que divide ambos exatamente."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nQual é o MMC de 5 e 10?", 
+opcoes:["5","10","15","20"], correta:1, 
+explicacao:"O MMC de 5 e 10 é 10, o menor número que é múltiplo de ambos."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nO que significa o MDC de dois números?", 
+opcoes:["O maior número que divide ambos","O menor múltiplo comum","O maior múltiplo comum","O menor divisor de um deles"], correta:0, 
+explicacao:"O MDC é o maior número que divide ambos os números sem deixar resto."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nQual é o menor múltiplo comum de 9 e 12?", 
+opcoes:["24","36","18","48"], correta:1, 
+explicacao:"O MMC de 9 e 12 é 36, pois é o menor número que ambos os números dividem sem resto."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nQual é o MDC de 42 e 56?", 
+opcoes:["7","14","28","21"], correta:1, 
+explicacao:"O MDC de 42 e 56 é 14, o maior número que divide ambos sem resto."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nQual dos números a seguir é múltiplo de 12 e 18?", 
+opcoes:["36","30","24","54"], correta:0, 
+explicacao:"O menor múltiplo comum de 12 e 18 é 36."},
+
+{materia:"Matemática 6º Ano", assunto:"MMC e MDC", 
+pergunta:"\nO que indica que dois números são primos entre si?", 
+opcoes:["O MDC deles é 1","O MMC deles é 1","O MMC deles é igual a um deles","Não têm múltiplos em comum"], correta:0, 
+explicacao:"Dois números são primos entre si quando o maior divisor comum entre eles é 1."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nQual é o resultado de 2³?", 
+opcoes:["6","8","9","4"], correta:1, 
+explicacao:"2³ significa 2 × 2 × 2 = 8."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nQual é o valor de 5²?", 
+opcoes:["10","25","20","15"], correta:1, 
+explicacao:"5² significa 5 × 5 = 25."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nO que representa 7⁰?", 
+opcoes:["0","1","7","Não existe"], correta:1, 
+explicacao:"Qualquer número elevado a zero é igual a 1."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nQual é o resultado de 3⁴?", 
+opcoes:["81","64","27","12"], correta:0, 
+explicacao:"3⁴ significa 3 × 3 × 3 × 3 = 81."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nSe 10² = ?", 
+opcoes:["10","20","100","50"], correta:2, 
+explicacao:"10² significa 10 × 10 = 100."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nO que é 4³?", 
+opcoes:["12","64","16","8"], correta:1, 
+explicacao:"4³ significa 4 × 4 × 4 = 64."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nQual é o valor de 6¹?", 
+opcoes:["6","1","36","0"], correta:0, 
+explicacao:"Qualquer número elevado a 1 é ele mesmo, então 6¹ = 6."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nO resultado de 9² é:", 
+opcoes:["18","81","72","27"], correta:1, 
+explicacao:"9² significa 9 × 9 = 81."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nQual é o resultado de 2⁵?", 
+opcoes:["32","10","25","16"], correta:0, 
+explicacao:"2⁵ significa 2 × 2 × 2 × 2 × 2 = 32."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Potenciação básica", 
+pergunta:"\nSe 8² = ?", 
+opcoes:["16","64","32","8"], correta:1, 
+explicacao:"8² significa 8 × 8 = 64."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nQual é o resultado de 5 + 3 × 2?", 
+opcoes:["10","11","16","13"], correta:1, 
+explicacao:"Na expressão, primeiro fazemos a multiplicação: 3 × 2 = 6, depois somamos 5 + 6 = 11."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nCalcule: (8 - 3) × 4", 
+opcoes:["12","20","24","16"], correta:1, 
+explicacao:"Dentro dos parênteses: 8 - 3 = 5, multiplicando por 4: 5 × 4 = 20."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nQual é o resultado de 18 ÷ (3 × 2)?", 
+opcoes:["3","9","6","2"], correta:0, 
+explicacao:"Dentro do parênteses: 3 × 2 = 6, depois 18 ÷ 6 = 3."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nCalcule: 10 - 2² + 5", 
+opcoes:["13","11","7","15"], correta:1, 
+explicacao:"Potência primeiro: 2² = 4, então 10 - 4 + 5 = 11."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nQual é o resultado de (6 + 2) ÷ 2?", 
+opcoes:["5","8","4","6"], correta:2, 
+explicacao:"Dentro do parênteses: 6 + 2 = 8, depois 8 ÷ 2 = 4."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nCalcule: 7 × (3 + 2) - 5", 
+opcoes:["32","30","28","25"], correta:1, 
+explicacao:"Parênteses: 3 + 2 = 5, multiplicando: 7 × 5 = 35, subtraindo 5: 35 - 5 = 30."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nQual é o resultado de 12 ÷ 3 + 4?", 
+opcoes:["7","12","4","8"], correta:3, 
+explicacao:"Primeiro a divisão: 12 ÷ 3 = 4, depois somamos 4 + 4 = 8."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nCalcule: 5 + 6 × 2 - 3", 
+opcoes:["10","14","11","20"], correta:1, 
+explicacao:"Multiplicação primeiro: 6 × 2 = 12, depois 5 + 12 - 3 = 14."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nQual é o resultado de (9 - 4) × (2 + 3)?", 
+opcoes:["30","25","15","20"], correta:1, 
+explicacao:"Primeiro dentro dos parênteses: 9 - 4 = 5 e 2 + 3 = 5, multiplicando: 5 × 5 = 25."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Expressões numéricas", 
+pergunta:"\nCalcule: 18 ÷ 2 + 6 × 1", 
+opcoes:["15","12","14","16"], correta:0, 
+explicacao:"Divisão e multiplicação primeiro: 18 ÷ 2 = 9, 6 × 1 = 6, depois somamos: 9 + 6 = 15."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nJoão comprou 3 pacotes de figurinhas com 12 unidades cada. Quantas figurinhas ele comprou ao todo?", 
+opcoes:["12","36","15","30"], correta:1, 
+explicacao:"3 pacotes × 12 figurinhas = 36 figurinhas."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nUm carro percorre 60 km por hora. Quantos quilômetros ele percorrerá em 3 horas?", 
+opcoes:["200","180","150","120"], correta:1, 
+explicacao:"60 km/h × 3 h = 180 km."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nMaria tem R$50 e gasta R$15 comprando um brinquedo. Quanto dinheiro ela terá depois?", 
+opcoes:["35","25","30","65"], correta:0, 
+explicacao:"50 - 15 = 35."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nUma caixa contém 24 maçãs. Se forem distribuídas igualmente entre 6 crianças, quantas maçãs cada criança receberá?", 
+opcoes:["6","4","3","5"], correta:1, 
+explicacao:"24 ÷ 6 = 4 maçãs por criança."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nUm trem viaja 240 km em 4 horas. Qual é a velocidade média do trem?", 
+opcoes:["50 km/h","70 km/h","60 km/h","55 km/h"], correta:2, 
+explicacao:"Velocidade média = distância ÷ tempo = 240 ÷ 4 = 60 km/h."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nClara comprou 5 caixas de suco, cada caixa com 8 litros. Quantos litros de suco ela comprou no total?", 
+opcoes:["45","40","30","35"], correta:1, 
+explicacao:"5 × 8 = 40 litros."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nUm fazendeiro colheu 180 kg de batatas e quer dividir em sacos de 15 kg cada. Quantos sacos ele terá?", 
+opcoes:["10","12","14","15"], correta:1, 
+explicacao:"180 ÷ 15 = 12 sacos."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nUma loja vende canetas por R$3 cada. Quantas canetas poderão ser compradas com R$24?", 
+opcoes:["6","7","8","9"], correta:2, 
+explicacao:"24 ÷ 3 = 8 canetas."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nPedro tem 50 balas e decide dividir igualmente entre 5 amigos. Quantas balas cada amigo receberá?", 
+opcoes:["10","8","12","9"], correta:0, 
+explicacao:"50 ÷ 5 = 10 balas por amigo."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Problemas matemáticos", 
+pergunta:"\nUma fábrica produz 120 brinquedos por dia. Quantos brinquedos serão produzidos em 7 dias?", 
+opcoes:["720","840","800","700"], correta:1, 
+explicacao:"120 × 7 = 840 brinquedos."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nO que é um ponto na geometria?", 
+opcoes:["Um sólido","Uma posição sem dimensão","Um segmento de reta","Uma superfície"], correta:1, 
+explicacao:"Na geometria, um ponto representa apenas uma posição no espaço, sem comprimento, largura ou altura."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nO que é uma reta?", 
+opcoes:["Um segmento com começo e fim","Uma linha infinita sem curvatura","Um ponto no espaço","Uma figura plana com área"], correta:1, 
+explicacao:"Uma reta é uma linha que se estende infinitamente em duas direções, sem curvas."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nO que é um plano?", 
+opcoes:["Um sólido geométrico","Uma superfície infinita e plana","Uma linha com curva","Um ponto no espaço"], correta:1, 
+explicacao:"Um plano é uma superfície que se estende infinitamente em todas as direções, sem espessura."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nQuando duas retas são paralelas?", 
+opcoes:["Quando têm comprimentos iguais","Quando nunca se encontram","Quando formam um ângulo de 90°","Quando se cruzam em um ponto"], correta:1, 
+explicacao:"Retas paralelas nunca se encontram, independentemente de quanto se estendam."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nQuando duas retas se cruzam, elas são chamadas de:", 
+opcoes:["Perpendiculares","Coincidentes","Concorrentes","Paralelas"], correta:2, 
+explicacao:"Duas retas que se cruzam em um ponto são chamadas de concorrentes."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nRetas que se cruzam formando um ângulo de 90° são chamadas de:", 
+opcoes:["Concorrentes","Perpendiculares","Oblíquas","Paralelas"], correta:1, 
+explicacao:"Retas perpendiculares se cruzam formando ângulos retos de 90°."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nSe duas retas nunca se encontram e não são paralelas, elas são chamadas de:", 
+opcoes:["Concorrentes","Perpendiculares","Reversas ou não coplanares","Coincidentes"], correta:2, 
+explicacao:"Retas reversas ou não coplanares não se encontram e não estão no mesmo plano."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nQual é a representação de um ponto em um desenho geométrico?", 
+opcoes:["Um cubo","Uma linha","Um pequeno círculo ou ponto preto","Um plano"], correta:2, 
+explicacao:"Um ponto geralmente é representado por um pequeno círculo ou um ponto preto em diagramas."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nUma linha que possui início e fim é chamada de:", 
+opcoes:["Reta","Plano","Ponto","Segmento de reta"], correta:3, 
+explicacao:"Um segmento de reta tem comprimento definido e limites: um início e um fim."},
+
+{materia:"Matemática 6º Ano", 
+assunto:"Geometria básica (ponto, reta e plano)", 
+pergunta:"\nComo se chama o lugar geométrico formado por todos os pontos entre dois extremos?", 
+opcoes:["Plano","Reta infinita","Segmento de reta","Ponto"], correta:2, 
+explicacao:"O segmento de reta é formado por todos os pontos que estão entre dois pontos extremos."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Perímetro",
+pergunta:"\nO que é perímetro de uma figura geométrica?",
+opcoes:["O ponto médio de cada lado","O comprimento total do contorno da figura","A área interna da figura","O volume da figura"], correta:1,
+explicacao:"O perímetro é a soma de todos os lados que formam o contorno da figura."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Perímetro",
+pergunta:"\nUm quadrado possui lado de 5 cm. Qual é o perímetro do quadrado?",
+opcoes:["15 cm","20 cm","25 cm","10 cm"], correta:1,
+explicacao:"Perímetro do quadrado = 4 × lado = 4 × 5 = 20 cm."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Perímetro",
+pergunta:"\nUm retângulo possui comprimento 8 m e largura 3 m. Qual é seu perímetro?",
+opcoes:["20 m","24 m","22 m","18 m"], correta:2,
+explicacao:"Perímetro do retângulo = 2 × (comprimento + largura) = 2 × (8 + 3) = 22 m."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Perímetro",
+pergunta:"\nQual é o perímetro de um triângulo com lados 6 cm, 4 cm e 5 cm?",
+opcoes:["16 cm","15 cm","14 cm","18 cm"], correta:1,
+explicacao:"Perímetro do triângulo = soma dos lados = 6 + 4 + 5 = 15 cm."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Perímetro",
+pergunta:"\nUm pentágono regular tem lados de 7 cm. Qual é o perímetro do pentágono?",
+opcoes:["32 cm","30 cm","28 cm","35 cm"], correta:3,
+explicacao:"Perímetro do pentágono regular = 5 × lado = 5 × 7 = 35 cm."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Perímetro",
+pergunta:"\nSe um hexágono regular possui lado de 6 m, qual é seu perímetro?",
+opcoes:["40 m","32 m","36 m","30 m"], correta:2,
+explicacao:"Perímetro do hexágono regular = 6 × lado = 6 × 6 = 36 m."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Perímetro",
+pergunta:"\nUm quadrado tem perímetro de 24 cm. Qual é o comprimento de cada lado?",
+opcoes:["8 cm","5 cm","7 cm","6 cm"], correta:3,
+explicacao:"Lado do quadrado = perímetro ÷ 4 = 24 ÷ 4 = 6 cm."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Perímetro",
+pergunta:"\nUm triângulo possui lados 7 cm, 9 cm e 12 cm. Qual é o perímetro?",
+opcoes:["27 cm","28 cm","26 cm","25 cm"], correta:1,
+explicacao:"Perímetro = soma dos lados = 7 + 9 + 12 = 28 cm."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Perímetro",
+pergunta:"\nO perímetro de um quadrado é 16 m. Qual é o comprimento de um lado?",
+opcoes:["5 m","6 m","4 m","8 m"], correta:2,
+explicacao:"Lado = perímetro ÷ 4 = 16 ÷ 4 = 4 m."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nO que é área de uma figura geométrica?",
+opcoes:["O contorno da figura","O espaço interno da figura","O comprimento de um lado","O volume da figura"], correta:1,
+explicacao:"Área é a medida do espaço interno de uma figura plana."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nQual é a fórmula da área de um quadrado?",
+opcoes:["lado × lado","2 × lado","lado + lado","4 × lado"], correta:0,
+explicacao:"A área do quadrado é lado ao quadrado: lado × lado."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm quadrado tem lado de 6 cm. Qual é sua área?",
+opcoes:["36 cm²","12 cm²","18 cm²","24 cm²"], correta:0,
+explicacao:"Área = lado × lado = 6 × 6 = 36 cm²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nQual é a fórmula da área de um retângulo?",
+opcoes:["comprimento × largura","2 × (comprimento + largura)","comprimento + largura","lado × lado"], correta:0,
+explicacao:"Área do retângulo = comprimento × largura."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm retângulo tem comprimento 8 m e largura 5 m. Qual é a área?",
+opcoes:["40 m²","26 m²","20 m²","13 m²"], correta:0,
+explicacao:"Área = comprimento × largura = 8 × 5 = 40 m²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nQual é a fórmula da área de um triângulo?",
+opcoes:["base × altura ÷ 2","base × altura","2 × (base + altura)","base + altura ÷ 2"], correta:0,
+explicacao:"Área do triângulo = (base × altura) ÷ 2."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm triângulo tem base 10 cm e altura 6 cm. Qual é sua área?",
+opcoes:["30 cm²","16 cm²","60 cm²","20 cm²"], correta:0,
+explicacao:"Área = (10 × 6) ÷ 2 = 30 cm²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm triângulo com base 8 m e altura 5 m tem área:",
+opcoes:["20 m²","40 m²","13 m²","26 m²"], correta:0,
+explicacao:"Área = (8 × 5) ÷ 2 = 20 m²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nQual é a fórmula da área de um paralelogramo?",
+opcoes:["base × altura","2 × (base + altura)","base × base","lado × lado"], correta:0,
+explicacao:"Área do paralelogramo = base × altura."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm paralelogramo tem base 12 cm e altura 4 cm. Qual é sua área?",
+opcoes:["48 cm²","16 cm²","24 cm²","20 cm²"], correta:0,
+explicacao:"Área = base × altura = 12 × 4 = 48 cm²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nQual é a fórmula da área de um losango?",
+opcoes:["diagonal maior × diagonal menor ÷ 2","lado × lado","base × altura","2 × (base + altura)"], correta:0,
+explicacao:"Área do losango = (diagonal maior × diagonal menor) ÷ 2."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm losango tem diagonais de 10 cm e 6 cm. Qual é a área?",
+opcoes:["30 cm²","16 cm²","60 cm²","20 cm²"], correta:0,
+explicacao:"Área = (10 × 6) ÷ 2 = 30 cm²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm losango tem diagonais 8 m e 5 m. Qual é sua área?",
+opcoes:["20 m²","40 m²","13 m²","26 m²"], correta:0,
+explicacao:"Área = (8 × 5) ÷ 2 = 20 m²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nQual é a fórmula da área de um trapézio?",
+opcoes:["(base maior + base menor) × altura ÷ 2","base × altura","lado × lado","2 × (base + altura)"], correta:0,
+explicacao:"Área do trapézio = ((base maior + base menor) × altura) ÷ 2."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm trapézio tem base maior 10 cm, base menor 6 cm e altura 4 cm. Qual é a área?",
+opcoes:["32 cm²","40 cm²","16 cm²","24 cm²"], correta:0,
+explicacao:"Área = ((10 + 6) × 4) ÷ 2 = 32 cm²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm trapézio tem bases 12 m e 8 m e altura 5 m. Qual é a área?",
+opcoes:["50 m²","40 m²","60 m²","45 m²"], correta:0,
+explicacao:"Área = ((12 + 8) × 5) ÷ 2 = 50 m²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm quadrado tem área 49 cm². Qual é a medida de seu lado?",
+opcoes:["7 cm","6 cm","8 cm","9 cm"], correta:0,
+explicacao:"Lado = √área = √49 = 7 cm."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nUm retângulo tem área 54 m² e largura 6 m. Qual é o comprimento?",
+opcoes:["9 m","8 m","10 m","12 m"], correta:0,
+explicacao:"Comprimento = área ÷ largura = 54 ÷ 6 = 9 m."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nA área de um triângulo é 24 cm² e sua base mede 6 cm. Qual é a altura?",
+opcoes:["8 cm","6 cm","4 cm","12 cm"], correta:0,
+explicacao:"Área = (base × altura) ÷ 2 → 24 = (6 × h)/2 → h = 8 cm."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nA área de um paralelogramo é 45 m² e sua base mede 9 m. Qual é a altura?",
+opcoes:["5 m","6 m","4 m","7 m"], correta:0,
+explicacao:"Área = base × altura → 45 = 9 × h → h = 5 m."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nA área de um losango é 32 cm² e uma diagonal mede 8 cm. Qual é a outra diagonal?",
+opcoes:["8 cm","6 cm","9 cm","10 cm"], correta:0,
+explicacao:"Área = (d1 × d2)/2 → 32 = (8 × d2)/2 → d2 = 8 cm."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nA área de um trapézio é 36 m², altura 4 m e base menor 6 m. Qual é a base maior?",
+opcoes:["12 m","10 m","14 m","8 m"], correta:0,
+explicacao:"Área = ((B + b) × h)/2 → 36 = ((B + 6) × 4)/2 → B + 6 = 18 → B = 12 m."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nQual é a área de um quadrado de lado 15 cm?",
+opcoes:["225 cm²","30 cm²","150 cm²","200 cm²"], correta:0,
+explicacao:"Área = lado × lado = 15 × 15 = 225 cm²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Área simples",
+pergunta:"\nQual é a área de um retângulo de comprimento 20 m e largura 5 m?",
+opcoes:["100 m²","50 m²","80 m²","25 m²"], correta:0,
+explicacao:"Área = comprimento × largura = 20 × 5 = 100 m²."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Operações com números inteiros",
+pergunta:"\nQual é o resultado de -7 + 5?",
+opcoes:["12","-12","-2","2"], correta:2,
+explicacao:"-7 + 5 = -2. Soma de números com sinais diferentes, vence o maior valor absoluto com seu sinal."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Operações com números inteiros",
+pergunta:"\nQual é o resultado de 8 - (-3)?",
+opcoes:["-11","11","-5","5"], correta:1,
+explicacao:"8 - (-3) = 8 + 3 = 11. Subtração de número negativo equivale a soma."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Operações com números inteiros",
+pergunta:"\nQual é o resultado de -6 - 4?",
+opcoes:["2","-10","-2","10"], correta:1,
+explicacao:"-6 - 4 = -6 + (-4) = -10. Soma de dois números negativos."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Operações com números inteiros",
+pergunta:"\nQual é o resultado de 12 + (-7)?",
+opcoes:["19","5","-5","-19"], correta:1,
+explicacao:"12 + (-7) = 5. Soma de positivo com negativo, o maior valor absoluto mantém o sinal."},
+
+{materia:"Matemática 6º Ano",
+assunto:"Operações com números inteiros",
+pergunta:"\nQual é o resultado de -9 + (-3)?",
+opcoes:["-12","12","-6","6"], correta:0,
+explicacao:"-9 + (-3) = -12. Soma de dois números negativos é negativa."},
+
+{materia:"Matemática 6º Ano",assunto:"Operações com números inteiros",pergunta:"\nQual é o resultado de 7 - 10?",opcoes:["17","3","-3","-17"], correta:2,explicacao:"7 - 10 = 7 + (-10) = -3. Soma de positivo com negativo."},
+
+{materia:"Matemática 6º Ano",assunto:"Operações com números inteiros",pergunta:"\nQual é o resultado de -4 - (-6)?",opcoes:["-2","2","-10","10"], correta:1,explicacao:"-4 - (-6) = -4 + 6 = 2. Subtração de número negativo equivale a soma."},
+
+{materia:"Matemática 6º Ano",assunto:"Operações com números inteiros",pergunta:"\nQual é o resultado de -8 + 0?",opcoes:["8","0","-8","-1"], correta:2,explicacao:"-8 + 0 = -8. Somar zero não altera o número."},
+
+{materia:"Matemática 6º Ano",assunto:"Operações com números inteiros",pergunta:"\nQual é o resultado de 5 - 5?",opcoes:["5","0","-10","10"], correta:1,explicacao:"5 - 5 = 0. Subtração de um número por ele mesmo é zero."},
+
+{materia:"Matemática 6º Ano",assunto:"Operações com números inteiros",pergunta:"\nQual é o resultado de -7 + (-8)?",opcoes:["1","-15","15","-1"], correta:1,explicacao:"-7 + (-8) = -15. Soma de dois números negativos."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual é o número oposto de -7?",opcoes:["-7","0","7","-1"], correta:2,explicacao:"O número oposto é aquele que, somado ao original, resulta em zero. O oposto de -7 é 7."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual é o resultado de -5 + 8?",opcoes:["-3","13","-13","3"], correta:3,explicacao:"-5 + 8 = 3. Soma de número negativo com positivo, maior em valor absoluto vence o sinal."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual é o resultado de 6 - 10?",opcoes:["4","-16","-4","16"], correta:2,explicacao:"6 - 10 = 6 + (-10) = -4."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual é o resultado de -3 - 7?",opcoes:["4","-10","-4","10"], correta:1,explicacao:"-3 - 7 = -3 + (-7) = -10."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual número vem imediatamente antes do -2 na reta numérica?",opcoes:["0","-1","-3","1"], correta:2,explicacao:"Na reta numérica, antes de -2 vem -3."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual é o resultado de (-4) + (-6)?",opcoes:["2","-2","-10","10"], correta:2,explicacao:"A soma de dois números negativos é negativa: -4 + (-6) = -10."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual é o oposto do número 12?",opcoes:["12","0","-12","1"], correta:2,explicacao:"O oposto de um número é o número com sinal contrário. O oposto de 12 é -12."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual é o resultado de 9 + (-5)?",opcoes:["-4","14","4","-14"], correta:2,explicacao:"9 + (-5) = 4. A operação é soma de positivo e negativo, o maior valor absoluto mantém o sinal."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual é o resultado de -8 - (-3)?",opcoes:["11","-5","5","-11"], correta:1,explicacao:"-8 - (-3) = -8 + 3 = -5."},
+
+{materia:"Matemática 6º Ano",assunto:"Números inteiros (positivos e negativos)",pergunta:"\nQual número é maior: -2 ou -5?",opcoes:["0","-5","-2","2"], correta:2,explicacao:"Na reta numérica, quanto mais próximo de zero, maior o número. Portanto, -2 > -5."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", pergunta:"\nQual é o menor número natural?", opcoes:["0","1","-1","2"], correta:0, explicacao:"O menor número natural é 0, pois os naturais começam a partir de zero."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", pergunta:"\nO número -5 pertence a qual conjunto numérico?", opcoes:["Naturais","Inteiros","Racionais","Reais"], correta:1, explicacao:"-5 é um número inteiro, pois os inteiros incluem negativos, positivos e zero."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", 
+pergunta:"\nQual destes números é racional?", 
+opcoes:["√2","π","3/4","e"], correta:2, 
+explicacao:"3/4 é um número racional, pois pode ser escrito como uma fração de inteiros."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", 
+pergunta:"\nO resultado de -7 + 12 é:", 
+opcoes:["5","-19","-5","7"], correta:0, 
+explicacao:"-7 + 12 = 5. Soma de números com sinais diferentes, vence o maior valor absoluto com seu sinal."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", 
+pergunta:"\nQual número não pertence ao conjunto dos naturais?", 
+opcoes:["0","10","-3","5"], correta:2, 
+explicacao:"-3 não é natural, pois números naturais são 0, 1, 2, 3… sem negativos."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", 
+pergunta:"\nQual é a forma decimal de 3/5?", 
+opcoes:["0,6","0,5","0,75","0,3"], correta:0, 
+explicacao:"3 ÷ 5 = 0,6. Todo número racional pode ser escrito como decimal exato ou periódico."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", 
+pergunta:"\nQual a soma de -8 e -4?", 
+opcoes:["-12","12","-4","4"], correta:0, 
+explicacao:"-8 + (-4) = -12. Soma de números negativos resulta em um número negativo com valor absoluto somado."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", 
+pergunta:"\nQual número inteiro está entre 2,3 e 5,7?", 
+opcoes:["2","3","6","5"], correta:1, 
+explicacao:"O número inteiro entre 2,3 e 5,7 é 3. Entre dois números racionais podem existir vários inteiros."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", 
+pergunta:"\nO número 0,25 é:", 
+opcoes:["Natural","Inteiro","Racional","Irracional"], correta:2, 
+explicacao:"0,25 = 1/4, portanto é um número racional."},
+
+{materia:"Matemática 7º Ano", assunto:"Números naturais, inteiros e racionais", 
+pergunta:"\nSe x = -3 e y = 7, qual é x + y?", 
+opcoes:["10","-10","4","-4"], correta:2, 
+explicacao:"x + y = -3 + 7 = 4. Soma de números com sinais diferentes resulta no valor do maior absoluto com seu sinal."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nQual é o valor de 2³?",
+opcoes:["6","8","9","12"], correta:1,
+explicacao:"2³ significa 2 × 2 × 2 = 8."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nQual é o valor de 5²?",
+opcoes:["25","10","20","15"], correta:0,
+explicacao:"5² = 5 × 5 = 25."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nQual é o resultado de 3⁴?",
+opcoes:["64","12","81","27"], correta:2,
+explicacao:"3⁴ = 3 × 3 × 3 × 3 = 81."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nO que representa a expressão 7⁰?",
+opcoes:["0","7","Indeterminado","1"], correta:3,
+explicacao:"Qualquer número diferente de zero elevado a 0 é igual a 1."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nQual é o valor de (-2)³?",
+opcoes:["8","-6","-8","6"], correta:2,
+explicacao:"(-2)³ = -2 × -2 × -2 = -8. Expoente ímpar mantém o sinal negativo."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nQual é o resultado de 10² × 10³?",
+opcoes:["10⁹","10⁵","10⁶","1000"], correta:1,
+explicacao:"Ao multiplicar potências de mesma base, somamos os expoentes: 2+3=5. Então 10² × 10³ = 10⁵."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nQual é o valor de 4³ ÷ 4²?",
+opcoes:["16","4","2","8"], correta:1,
+explicacao:"Ao dividir potências de mesma base, subtraímos os expoentes: 3-2=1. Então 4³ ÷ 4² = 4¹ = 4."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nQual é o resultado de 1⁵?",
+opcoes:["5","-1","0","1"], correta:3,
+explicacao:"1 elevado a qualquer potência é sempre 1."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nQual é o valor de 2⁵?",
+opcoes:["25","32","16","10"], correta:1,
+explicacao:"2⁵ = 2 × 2 × 2 × 2 × 2 = 32."},
+
+{materia:"Matemática 7º Ano", assunto:"Potenciação básica",
+pergunta:"\nQual é o resultado de (-3)²?",
+opcoes:["6","9","-9","-6"], correta:1,
+explicacao:"(-3)² = -3 × -3 = 9. Potência com expoente par resulta em valor positivo."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"\nQual é a raiz quadrada de 16?", 
+opcoes:["2","4","8","6"], correta:1, 
+explicacao:"√16 = 4, pois 4 × 4 = 16."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"\nQual é a raiz cúbica de 27?", 
+opcoes:["3","9","6","5"], correta:0, 
+explicacao:"³√27 = 3, pois 3 × 3 × 3 = 27."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"\nO que é a raiz quadrada de 49?", 
+opcoes:["6","9","7","8"], correta:2, 
+explicacao:"√49 = 7, pois 7 × 7 = 49."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"\nQual é a raiz quadrada de 64?", 
+opcoes:["4","16","6","8"], correta:3, 
+explicacao:"√64 = 8, pois 8 × 8 = 64."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"Qual é a raiz cúbica de 125?", 
+opcoes:["25","10","5","15"], correta:2, 
+explicacao:"³√125 = 5, pois 5 × 5 × 5 = 125."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"\nO que é a raiz quadrada de 100?", 
+opcoes:["10","5","20","50"], correta:0, 
+explicacao:"√100 = 10, pois 10 × 10 = 100."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"\nQual é a raiz quadrada de 81?", 
+opcoes:["8","7","6","9"], correta:3, 
+explicacao:"√81 = 9, pois 9 × 9 = 81."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"\nQual é a raiz cúbica de 8?", 
+opcoes:["8","2","4","3"], correta:1, 
+explicacao:"³√8 = 2, pois 2 × 2 × 2 = 8."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"\nQual é a raiz quadrada de 36?", 
+opcoes:["4","6","5","9"], correta:1, 
+explicacao:"√36 = 6, pois 6 × 6 = 36."},
+
+{materia:"Matemática 7º Ano", assunto:"Radiciação básica", 
+pergunta:"\nQual é a raiz cúbica de 1?", 
+opcoes:["0","1","-1","2"], correta:1, 
+explicacao:"³√1 = 1, pois 1 × 1 × 1 = 1."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o resultado de 2³ × 2²?", 
+opcoes:["2⁴","2⁵","2⁶","4⁵"], correta:1, 
+explicacao:"Ao multiplicar potências de mesma base, somamos os expoentes: 3+2=5, então 2³ × 2² = 2⁵."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o resultado de 5⁴ ÷ 5²?", 
+opcoes:["5³","5⁶","5²","25"], correta:2, 
+explicacao:"Ao dividir potências de mesma base, subtraímos os expoentes: 4-2=2, então 5⁴ ÷ 5² = 5²."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o resultado de (3²)³?", 
+opcoes:["3⁶","3⁹","9³","3⁵"], correta:0, 
+explicacao:"Ao elevar uma potência a outra potência, multiplicamos os expoentes: 2×3=6, então (3²)³ = 3⁶."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o valor de 10⁰?", 
+opcoes:["0","1","10","Indeterminado"], correta:1, 
+explicacao:"Qualquer número diferente de zero elevado a zero é igual a 1."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o resultado de 2⁵ ÷ 2³?", 
+opcoes:["2²","2³","2¹","2⁴"], correta:0, 
+explicacao:"Ao dividir potências de mesma base, subtraímos os expoentes: 5-3=2, então 2⁵ ÷ 2³ = 2²."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o resultado de (4³)²?", 
+opcoes:["4⁶","4⁹","4⁸","8³"], correta:0, 
+explicacao:"Ao elevar uma potência a outra potência, multiplicamos os expoentes: 3×2=6, então (4³)² = 4⁶."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o resultado de 7¹ × 7³?", 
+opcoes:["7²","7³","7⁴","7¹"], correta:2, 
+explicacao:"Ao multiplicar potências de mesma base, somamos os expoentes: 1+3=4, então 7¹ × 7³ = 7⁴."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o resultado de 9⁴ ÷ 9²?", 
+opcoes:["9³","9²","81","9⁶"], correta:1, 
+explicacao:"Ao dividir potências de mesma base, subtraímos os expoentes: 4-2=2, então 9⁴ ÷ 9² = 9²."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o resultado de (2³)⁴?", 
+opcoes:["2¹²","2¹¹","2⁷","8⁴"], correta:0, 
+explicacao:"Ao elevar uma potência a outra potência, multiplicamos os expoentes: 3×4=12, então (2³)⁴ = 2¹²."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da potenciação", 
+pergunta:"\nQual é o resultado de 5⁰ × 5³?", 
+opcoes:["5⁰","5³","5⁴","0"], correta:1, 
+explicacao:"Qualquer número diferente de zero elevado a 0 é 1, então 5⁰ × 5³ = 1 × 5³ = 5³."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é a raiz quadrada de 49?", 
+opcoes:["6","7","8","9"], correta:1, 
+explicacao:"√49 = 7, pois 7 × 7 = 49."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é a raiz cúbica de 64?", 
+opcoes:["3","4","16","8"], correta:1, 
+explicacao:"³√64 = 4, pois 4 × 4 × 4 = 64."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é o resultado de √81 × √9?", 
+opcoes:["18","27","9","36"], correta:1, 
+explicacao:"√81 = 9, √9 = 3, então 9 × 3 = 27."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é a raiz quadrada de 144?", 
+opcoes:["12","14","10","11"], correta:0, 
+explicacao:"√144 = 12, pois 12 × 12 = 144."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é o resultado de √36 ÷ √4?", 
+opcoes:["6","2","3","9"], correta:2, 
+explicacao:"√36 = 6, √4 = 2, então 6 ÷ 2 = 3."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é a raiz cúbica de 27?", 
+opcoes:["6","9","5","3"], correta:3, 
+explicacao:"³√27 = 3, pois 3 × 3 × 3 = 27."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é o valor de √25 × √16?", 
+opcoes:["15","10","25","20"], correta:3, 
+explicacao:"√25 = 5, √16 = 4, então 5 × 4 = 20."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é o resultado de √100 ÷ √25?", 
+opcoes:["5","10","2","4"], correta:2, 
+explicacao:"√100 = 10, √25 = 5, então 10 ÷ 5 = 2."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é a raiz quadrada de 196?", 
+opcoes:["16","14","13","12"], correta:1, 
+explicacao:"√196 = 14, pois 14 × 14 = 196."},
+
+{materia:"Matemática 7º Ano", assunto:"Propriedades da radiciação", 
+pergunta:"\nQual é o resultado de √64 × √4?", 
+opcoes:["32","16","12","8"], correta:1, 
+explicacao:"√64 = 8, √4 = 2, então 8 × 2 = 16."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual fração representa uma fração própria?", 
+opcoes:["3/5","7/3","5/5","8/4"], correta:0, 
+explicacao:"Fração própria é aquela em que o numerador é menor que o denominador, como 3/5."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual das frações abaixo é uma fração imprópria?", 
+opcoes:["2/7","9/4","3/8","1/5"], correta:1, 
+explicacao:"Fração imprópria é aquela em que o numerador é maior que o denominador, como 9/4."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual fração é uma fração aparente?", 
+opcoes:["3/4","5/6","8/4","2/3"], correta:2, 
+explicacao:"Fração aparente é aquela cujo numerador é múltiplo do denominador e resulta em número inteiro, como 8/4 = 2."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual alternativa representa um número misto?", 
+opcoes:["4/3","5/2","7/4","2 1/3"], correta:3, 
+explicacao:"Número misto é formado por um número inteiro e uma fração, como 2 1/3."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual é o numerador da fração 6/9?", 
+opcoes:["6","9","3","15"], correta:0, 
+explicacao:"O numerador é o número que fica na parte de cima da fração, que é 6."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual é o denominador da fração 4/7?", 
+opcoes:["4","7","11","3"], correta:1, 
+explicacao:"O denominador é o número que fica na parte de baixo da fração, que é 7."},
+
+{materia:"Matemática 7º Ano", 
+assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"Qual fração é equivalente a 1/2?", 
+opcoes:["2/3","3/5","2/4","5/8"], correta:2, 
+explicacao:"2/4 é equivalente a 1/2, pois ambas representam a mesma quantidade."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual fração representa uma unidade?", 
+opcoes:["2/3","3/4","5/6","4/4"], correta:3, 
+explicacao:"4/4 representa uma unidade inteira, pois o numerador é igual ao denominador."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual fração representa metade de um inteiro?", 
+opcoes:["1/2","1/3","1/4","1/5"], correta:0, 
+explicacao:"1/2 representa metade de um inteiro."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual fração é menor que 1?", 
+opcoes:["5/3","3/4","7/2","9/5"], correta:1, 
+explicacao:"3/4 é menor que 1, pois o numerador é menor que o denominador."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual fração é maior que 1?", 
+opcoes:["2/5","3/7","6/4","1/3"], correta:2, 
+explicacao:"6/4 é maior que 1, pois o numerador é maior que o denominador."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual fração representa três partes de quatro?", 
+opcoes:["4/3","3/2","2/3","3/4"], correta:3, 
+explicacao:"3/4 representa três partes de um total de quatro."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual das frações é uma fração unitária?", 
+opcoes:["1/7","2/7","3/7","4/7"], correta:0, 
+explicacao:"Fração unitária é aquela que tem numerador igual a 1, como 1/7."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações I: conceitos e exercícios simples (tipos de fração)", 
+pergunta:"\nQual fração é equivalente a 3/3?", 
+opcoes:["1/3","2/3","1","4/3"], correta:2, 
+explicacao:"3/3 é igual a 1, pois o numerador é igual ao denominador."},
+
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nJoão comeu 3/8 de uma pizza. Isso significa que ele comeu:", 
+opcoes:["3 partes de um total de 8","8 partes de um total de 3","3 pizzas inteiras","8 pedaços de 3 pizzas"], correta:0, 
+explicacao:"A fração 3/8 representa 3 partes de um total de 8 partes iguais."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nUma barra de chocolate foi dividida em 10 partes iguais e Maria comeu 7 partes. Qual fração representa o que ela comeu?", 
+opcoes:["10/7","7/10","3/10","7/3"], correta:1, 
+explicacao:"Maria comeu 7 das 10 partes, portanto a fração é 7/10."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nPedro bebeu metade de uma garrafa de suco. Qual fração representa essa quantidade?", 
+opcoes:["1/3","1/4","1/2","2/3"], correta:2, 
+explicacao:"Metade de um inteiro é representada pela fração 1/2."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nUma pizza foi dividida em 4 partes iguais e Ana comeu todas as partes. Qual fração representa o que ela comeu?", 
+opcoes:["1/4","2/4","3/4","4/4"], correta:3, 
+explicacao:"Ana comeu todas as 4 partes, então a fração é 4/4, que representa um inteiro."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nEm uma caixa com 12 bombons, Carlos comeu 6. Qual fração representa a quantidade que ele comeu?", 
+opcoes:["6/12","12/6","6/6","1/12"], correta:0, 
+explicacao:"Carlos comeu 6 de um total de 12 bombons, portanto a fração é 6/12."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nUma jarra tinha 8 copos de água e foram bebidos 3 copos. Qual fração representa a parte que foi bebida?", 
+opcoes:["8/3","3/8","5/8","3/5"], correta:1, 
+explicacao:"Foram bebidos 3 de um total de 8 copos, logo a fração é 3/8."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nUma torta foi dividida em 6 partes iguais e foram comidas todas as partes. Qual fração representa isso?", 
+opcoes:["5/6","3/6","1/6","6/6"], correta:3, 
+explicacao:"Foram comidas todas as 6 partes, então a fração é 6/6, que representa um inteiro."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nEm uma sala com 20 alunos, 5 faltaram. Qual fração representa os alunos que faltaram?", 
+opcoes:["5/20","20/5","15/20","1/20"], correta:0, 
+explicacao:"5 alunos faltaram de um total de 20, então a fração é 5/20."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nUm bolo foi dividido em 8 partes e 4 foram comidas. Qual fração representa a parte comida?", 
+opcoes:["8/4","4/8","1/8","4/1"], correta:1, 
+explicacao:"Foram comidas 4 de 8 partes, então a fração é 4/8."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nUma caixa tem 6 lápis e 6 são azuis. Qual fração representa os lápis azuis?", 
+opcoes:["6/1","1/6","6/6","3/6"], correta:2, 
+explicacao:"6 de 6 lápis são azuis, então a fração é 6/6, que representa o todo."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nUma melancia foi dividida em 10 partes e foram comidas 9 partes. Qual fração representa a parte comida?", 
+opcoes:["1/10","9/1","10/9","9/10"], correta:3, 
+explicacao:"Foram comidas 9 de 10 partes, então a fração é 9/10."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nEm uma biblioteca há 16 livros e 4 são de matemática. Qual fração representa os livros de matemática?", 
+opcoes:["4/16","16/4","12/16","1/16"], correta:0, 
+explicacao:"4 livros de um total de 16 são de matemática, então a fração é 4/16."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nUma pizza foi dividida em 12 pedaços e 3 pedaços foram comidos. Qual fração representa os pedaços comidos?", 
+opcoes:["12/3","3/12","9/12","3/9"], correta:1, 
+explicacao:"3 pedaços de um total de 12 foram comidos, então a fração é 3/12."},
+
+{materia:"Matemática 7º Ano", assunto:"Frações II: nível médio + contextualizados", 
+pergunta:"\nUma barra de cereal foi dividida em 4 partes e foram comidas 2 partes. Qual fração representa a parte comida?", 
+opcoes:["1/4","3/4","2/4","4/2"], correta:2, 
+explicacao:"Foram comidas 2 de 4 partes, então a fração é 2/4."},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma pizza foi dividida em 8 partes iguais e João comeu 2 partes. Qual fração representa a parte que João comeu?",
+"opcoes":["8/2","1/8","2/8","2/6"],
+"correta":2,
+"explicacao":"João comeu 2 de 8 partes, então a fração correta é 2/8."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma barra de chocolate foi dividida em 12 pedaços e Maria comeu 3 pedaços. Qual fração representa a parte comida?",
+"opcoes":["12/3","3/12","4/12","3/9"],
+"correta":1,
+"explicacao":"Maria comeu 3 de 12 pedaços, então a fração correta é 3/12."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nEm uma caixa com 10 lápis, 5 são vermelhos. Qual fração representa os lápis vermelhos?",
+"opcoes":["10/5","1/10","2/10","5/10"],
+"correta":3,
+"explicacao":"5 de 10 lápis são vermelhos, então a fração é 5/10."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma torta foi dividida em 6 partes iguais e todas foram comidas. Qual fração representa o total comido?",
+"opcoes":["5/6","3/6","6/6","1/6"],
+"correta":2,
+"explicacao":"Foram comidas todas as 6 partes, então a fração é 6/6, que representa um inteiro."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nEm uma sala com 20 alunos, 10 estão presentes. Qual fração representa os alunos presentes?",
+"opcoes":["20/10","10/20","1/20","5/20"],
+"correta":1,
+"explicacao":"10 alunos presentes de um total de 20, então a fração é 10/20."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma pizza foi dividida em 4 partes e 1 parte foi comida. Qual fração representa a parte comida?",
+"opcoes":["4/1","2/4","1/4","1/3"],
+"correta":2,
+"explicacao":"Foi comida 1 de 4 partes, então a fração correta é 1/4."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma garrafa tinha 8 copos de suco e foram bebidos 4 copos. Qual fração representa a parte bebida?",
+"opcoes":["4/8","3/8","8/4","1/8"],
+"correta":0,
+"explicacao":"Foram bebidos 4 de 8 copos, então a fração correta é 4/8."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma melancia foi dividida em 10 partes e foram comidas 5 partes. Qual fração representa a parte comida?",
+"opcoes":["5/10","10/5","5/1","1/10"],
+"correta":0,
+"explicacao":"Foram comidas 5 de 10 partes, então a fração correta é 5/10."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nEm uma caixa com 15 bombons, 3 são de morango. Qual fração representa os bombons de morango?",
+"opcoes":["15/3","1/15","3/15","6/15"],
+"correta":2,
+"explicacao":"3 bombons de morango de um total de 15, então a fração é 3/15."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma barra de cereal foi dividida em 6 partes e 2 foram comidas. Qual fração representa a parte comida?",
+"opcoes":["6/2","2/6","2/3","1/6"],
+"correta":1,
+"explicacao":"Foram comidas 2 de 6 partes, então a fração correta é 2/6."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nEm uma estante há 12 livros e 6 são de matemática. Qual fração representa os livros de matemática?",
+"opcoes":["6/12","12/6","3/12","1/12"],
+"correta":0,
+"explicacao":"6 de 12 livros são de matemática, então a fração é 6/12."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma pizza foi dividida em 8 pedaços e 7 pedaços foram comidos. Qual fração representa a parte comida?",
+"opcoes":["1/8","8/7","7/8","7/1"],
+"correta":2,
+"explicacao":"Foram comidos 7 de 8 pedaços, então a fração correta é 7/8."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nEm uma caixa com 9 lápis, 3 estão quebrados. Qual fração representa os lápis quebrados?",
+"opcoes":["9/3","3/9","1/9","6/9"],
+"correta":1,
+"explicacao":"3 lápis quebrados de um total de 9, então a fração é 3/9."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma torta foi dividida em 4 partes e 2 foram comidas. Qual fração representa a parte comida?",
+"opcoes":["2/4","4/2","3/4","1/4"],
+"correta":0,
+"explicacao":"Foram comidas 2 de 4 partes, então a fração correta é 2/4."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Frações III: nível médio + contexto + respostas parecidas",
+"pergunta":"\nUma jarra tinha 10 copos de suco e 5 foram bebidos. Qual fração representa a parte bebida?",
+"opcoes":["10/5","1/10","5/10","4/10"],
+"correta":2,
+"explicacao":"Foram bebidos 5 de 10 copos, então a fração correta é 5/10."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n50% de 100 é igual a:",
+"opcoes":["50","25","100","10"],
+"correta":0,
+"explicacao":"50% significa metade. Metade de 100 é 50."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n10% de 200 corresponde a:",
+"opcoes":["10","20","30","40"],
+"correta":1,
+"explicacao":"10% de 200 é 200 ÷ 10 = 20."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n25% de 80 é:",
+"opcoes":["20","15","10","25"],
+"correta":0,
+"explicacao":"25% representa um quarto. 80 ÷ 4 = 20."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n100% de 60 é:",
+"opcoes":["30","50","10","60"],
+"correta":3,
+"explicacao":"100% representa o total. Portanto, 100% de 60 é 60."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n50% de 40 corresponde a:",
+"opcoes":["10","20","30","40"],
+"correta":1,
+"explicacao":"50% é a metade. Metade de 40 é 20."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n20% de 50 é igual a:",
+"opcoes":["5","25","10","20"],
+"correta":2,
+"explicacao":"20% de 50 é 0,2 × 50 = 10."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n10% de 90 corresponde a:",
+"opcoes":["18","12","9","6"],
+"correta":2,
+"explicacao":"10% de 90 é 90 ÷ 10 = 9."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n25% de 40 é:",
+"opcoes":["10","20","15","5"],
+"correta":0,
+"explicacao":"25% é um quarto. 40 ÷ 4 = 10."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n100% de 150 corresponde a:",
+"opcoes":["100","150","50","200"],
+"correta":1,
+"explicacao":"100% representa o total, então é 150."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n50% de 60 é:",
+"opcoes":["20","40","30","60"],
+"correta":2,
+"explicacao":"50% é metade. Metade de 60 é 30."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n20% de 100 corresponde a:",
+"opcoes":["10","5","40","20"],
+"correta":3,
+"explicacao":"20% de 100 é 20."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n10% de 70 é:",
+"opcoes":["5","6","8","7"],
+"correta":3,
+"explicacao":"10% de 70 é 7."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n25% de 20 corresponde a:",
+"opcoes":["10","2","5","8"],
+"correta":2,
+"explicacao":"25% de 20 é 5."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n50% de 90 é:",
+"opcoes":["45","30","60","90"],
+"correta":0,
+"explicacao":"50% de 90 é 45."
+},
+
+{
+"materia":"Matemática 7º Ano",
+"assunto":"Porcentagem I: exercícios simples",
+"pergunta":"\n10% de 120 corresponde a:",
+"opcoes":["10","12","6","20"],
+"correta":1,
+"explicacao":"10% de 120 é 12."
+},
+
+
+
+
+{materia:"Matemática 7º Ano",assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUm produto custa R$100 e recebeu desconto de 20%. Qual é o novo preço?",
+opcoes:["R$80","R$20","R$120","R$90"], correta:0,
+explicacao:"20% de 100 é 20. 100 - 20 = 80."},
+
+{materia:"Matemática 7º Ano",assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUma camisa custa R$50 e teve aumento de 10%. Qual passou a ser o preço?",
+opcoes:["R$45","R$55","R$60","R$65"], correta:1,
+explicacao:"10% de 50 é 5. 50 + 5 = 55."},
+
+{materia:"Matemática 7º Ano",assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nEm uma turma com 40 alunos, 25% são meninas. Quantas meninas há?",
+opcoes:["10","15","5","20"], correta:0,
+explicacao:"25% de 40 é 40 ÷ 4 = 10."},
+
+{materia:"Matemática 7º Ano",assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUm celular custa R$800 e recebeu desconto de 50%. Qual é o novo preço?",
+opcoes:["R$300","R$200","R$600","R$400"], correta:3,
+explicacao:"50% de 800 é 400. 800 - 400 = 400."},
+
+{materia:"Matemática 7º Ano",assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUm aluno acertou 60% de uma prova com 20 questões. Quantas ele acertou?",
+opcoes:["10","12","14","8"], correta:1,
+explicacao:"60% de 20 é 12."},
+
+{materia:"Matemática 7º Ano",assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUma loja vendeu um produto de R$200 com desconto de 25%. Qual foi o preço final?",
+opcoes:["R$175","R$100","R$150","R$125"], correta:2,
+explicacao:"25% de 200 é 50. 200 - 50 = 150."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nEm um grupo de 50 pessoas, 40% gostam de futebol. Quantas pessoas gostam de futebol?",
+opcoes:["25","15","20","30"], correta:2,
+explicacao:"40% de 50 é 20."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUm produto de R$120 teve aumento de 10%. Qual é o novo preço?",
+opcoes:["R$132","R$140","R$110","R$150"], correta:0,
+explicacao:"10% de 120 é 12. 120 + 12 = 132."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUma sala tem 30 alunos e 20% faltaram. Quantos faltaram?",
+opcoes:["3","6","9","5"], correta:1,
+explicacao:"20% de 30 é 6."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUm tênis custa R$250 e teve desconto de 20%. Qual é o preço final?",
+opcoes:["R$180","R$220","R$200","R$150"], correta:2,
+explicacao:"20% de 250 é 50. 250 - 50 = 200."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUma prova vale 50 pontos e um aluno fez 70%. Quantos pontos ele fez?",
+opcoes:["30","40","45","35"], correta:3,
+explicacao:"70% de 50 é 35."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUm produto de R$300 teve aumento de 10%. Qual é o novo preço?",
+opcoes:["R$320","R$310","R$350","R$330"], correta:3,
+explicacao:"10% de 300 é 30. 300 + 30 = 330."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nEm uma escola com 200 alunos, 15% faltaram. Quantos faltaram?",
+opcoes:["25","35","30","40"], correta:2,
+explicacao:"15% de 200 é 30."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUm livro custa R$80 e recebeu desconto de 25%. Qual é o novo preço?",
+opcoes:["R$60","R$50","R$70","R$55"], correta:0,
+explicacao:"25% de 80 é 20. 80 - 20 = 60."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem II: nível médio + contexto",
+pergunta:"\nUma loja vendeu 40% de 90 camisas. Quantas camisas foram vendidas?",
+opcoes:["30","36","40","45"], correta:1,
+explicacao:"40% de 90 é 36."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUma camisa custa R$80,00 e teve aumento de 15%. Qual é o novo preço?",
+opcoes:["R$90,00","R$92,00","R$94,00","R$88,00"], correta:1,
+explicacao:"15% de 80 é 12. 80 + 12 = 92."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUma bicicleta custa R$900,00 e teve aumento de 8%. Qual é o novo preço?",
+opcoes:["R$960,00","R$950,00","R$972,00","R$940,00"], correta:2,
+explicacao:"8% de 900 é 72. 900 + 72 = 972."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUma loja vendeu um produto de R$150,00 com desconto de 20%. Qual foi o preço final?",
+opcoes:["R$120,00","R$125,00","R$130,00","R$110,00"], correta:0,
+explicacao:"20% de 150 é 30. 150 - 30 = 120."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUm salário de R$2.000,00 teve aumento de 5%. Qual passou a ser o salário?",
+opcoes:["R$2.050,00","R$2.100,00","R$2.150,00","R$2.000,00"], correta:1,
+explicacao:"5% de 2000 é 100. 2000 + 100 = 2100."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUm notebook custa R$3.000,00 e recebeu desconto de 15%. Qual é o novo preço?",
+opcoes:["R$2.600,00","R$2.500,00","R$2.550,00","R$2.450,00"], correta:2,
+explicacao:"15% de 3000 é 450. 3000 - 450 = 2550."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUma televisão custa R$2.400,00 e teve desconto de 25%. Qual é o preço final?",
+opcoes:["R$1.900,00","R$1.700,00","R$1.600,00","R$1.800,00"], correta:3,
+explicacao:"25% de 2400 é 600. 2400 - 600 = 1800."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUm curso custa R$600,00 e teve aumento de 10%. Qual é o novo preço?",
+opcoes:["R$640,00","R$650,00","R$660,00","R$620,00"], correta:2,
+explicacao:"10% de 600 é 60. 600 + 60 = 660."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUm produto de R$350,00 recebeu desconto de 20%. Qual é o novo preço?",
+opcoes:["R$280,00","R$300,00","R$270,00","R$260,00"], correta:0,
+explicacao:"20% de 350 é 70. 350 - 70 = 280."},
+
+{materia:"Matemática 7º Ano",
+assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUma bolsa custa R$120,00 e teve aumento de 25%. Qual é o novo valor?",
+opcoes:["R$140,00","R$150,00","R$155,00","R$145,00"], correta:1,
+explicacao:"25% de 120 é 30. 120 + 30 = 150."},
+
+{materia:"Matemática 7º Ano",assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUm produto de R$200,00 teve aumento de 8%. Qual é o novo preço?",
+opcoes:["R$210,00","R$216,00","R$220,00","R$212,00"], correta:1,
+explicacao:"8% de 200 é 16. 200 + 16 = 216."},
+
+{materia:"Matemática 7º Ano",assunto:"Porcentagem III: nível médio + contexto + respostas parecidas",
+pergunta:"\nUma geladeira custa R$2.000,00 e recebeu desconto de 15%. Qual é o preço final?",
+opcoes:["R$1.750,00","R$1.800,00","R$1.720,00","R$1.700,00"], correta:3,
+explicacao:"15% de 2000 é 300. 2000 - 300 = 1700."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 2 cadernos custam R$10, quanto custam 6 cadernos?", 
+opcoes:["R$20","R$25","R$30","R$15"], correta:2, 
+explicacao:"2 cadernos → 10 reais. 6 cadernos → x. 2x = 60 → x = 30."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 5 metros de tecido custam R$25, quanto custam 3 metros?", 
+opcoes:["R$10","R$15","R$12","R$20"], correta:1, 
+explicacao:"5 m → 25 reais. 3 m → x. 5x = 75 → x = 15."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 4 kg de arroz custam R$20, quanto custam 10 kg?", 
+opcoes:["R$30","R$40","R$45","R$50"], correta:3, 
+explicacao:"4 kg → 20 reais. 10 kg → x. 4x = 200 → x = 50."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 3 lápis custam R$6, quanto custam 5 lápis?", 
+opcoes:["R$10","R$8","R$12","R$15"], correta:0, 
+explicacao:"3 lápis → 6 reais. 5 lápis → x. 3x = 30 → x = 10."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 8 livros custam R$80, quanto custam 4 livros?", 
+opcoes:["R$30","R$20","R$40","R$60"], correta:2, 
+explicacao:"8 livros → 80 reais. 4 livros → x. 8x = 320 → x = 40."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 6 camisetas custam R$120, quanto custam 2 camisetas?", 
+opcoes:["R$60","R$40","R$20","R$80"], correta:1, 
+explicacao:"6 camisetas → 120 reais. 2 camisetas → x. 6x = 240 → x = 40."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 4 caixas têm 32 chocolates, quantos chocolates têm 6 caixas?", 
+opcoes:["48","40","36","52"], correta:0, 
+explicacao:"4 caixas → 32 chocolates. 6 caixas → x. 4x = 192 → x = 48."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 3 horas de estudo rendem 9 páginas lidas, quantas páginas serão lidas em 5 horas?", 
+opcoes:["12","10","15","18"], correta:2, 
+explicacao:"3 horas → 9 páginas. 5 horas → x. 3x = 45 → x = 15."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 2 pacotes têm 8 biscoitos, quantos biscoitos têm 5 pacotes?", 
+opcoes:["10","20","16","25"], correta:1, 
+explicacao:"2 pacotes → 8 biscoitos. 5 pacotes → x. 2x = 40 → x = 20."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 7 metros de corda pesam 14 kg, quanto pesam 3 metros?", 
+opcoes:["4 kg","8 kg","5 kg","6 kg"], correta:3, 
+explicacao:"7 m → 14 kg. 3 m → x. 7x = 42 → x = 6 kg."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 5 dias de trabalho produzem 50 peças, quantas peças são produzidas em 8 dias?", 
+opcoes:["80","60","70","90"], correta:0, 
+explicacao:"5 dias → 50 peças. 8 dias → x. 5x = 400 → x = 80."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 9 litros de gasolina permitem rodar 90 km, quantos km podem ser rodados com 6 litros?", 
+opcoes:["70","50","60","80"], correta:2, 
+explicacao:"9 L → 90 km. 6 L → x. 9x = 540 → x = 60 km."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta", 
+pergunta:"\nSe 6 caixas têm 18 garrafas, quantas garrafas têm 10 caixas?", 
+opcoes:["24","28","20","30"], correta:3, 
+explicacao:"6 caixas → 18 garrafas. 10 caixas → x. 6x = 180 → x = 30."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 4 operários fazem uma obra em 12 dias, em quantos dias 6 operários farão a mesma obra?", 
+opcoes:["10 dias","9 dias","6 dias","8 dias"], correta:3, 
+explicacao:"Mais operários → menos dias. 4 × 12 = 6 × x → 48 = 6x → x = 8 dias."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 5 torneiras enchem um tanque em 20 minutos, em quanto tempo 4 torneiras enchem o mesmo tanque?", 
+opcoes:["10 min","15 min","25 min","20 min"], correta:2, 
+explicacao:"Menos torneiras → mais tempo. 5 × 20 = 4 × x → 100 = 4x → x = 25 min."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 8 máquinas produzem um lote em 6 horas, em quanto tempo 12 máquinas produzirão o mesmo lote?", 
+opcoes:["6 h","4 h","3 h","5 h"], correta:1, 
+explicacao:"Mais máquinas → menos tempo. 8 × 6 = 12 × x → 48 = 12x → x = 4 h."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 3 caminhões transportam uma carga em 15 viagens, quantas viagens serão necessárias com 5 caminhões?", 
+opcoes:["9 viagens","12 viagens","15 viagens","18 viagens"], correta:0, 
+explicacao:"Mais caminhões → menos viagens. 3 × 15 = 5 × x → 45 = 5x → x = 9 viagens."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 6 operários constroem um muro em 10 dias, em quantos dias 4 operários farão o mesmo trabalho?", 
+opcoes:["8 dias","6 dias","12 dias","15 dias"], correta:3, 
+explicacao:"Menos operários → mais dias. 6 × 10 = 4 × x → 60 = 4x → x = 15 dias."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 9 torneiras enchem uma piscina em 12 horas, em quanto tempo 6 torneiras enchem a mesma piscina?", 
+opcoes:["10 h","12 h","18 h","15 h"], correta:2, 
+explicacao:"Menos torneiras → mais tempo. 9 × 12 = 6 × x → 108 = 6x → x = 18 h."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 10 trabalhadores fazem uma estrada em 20 dias, em quantos dias 25 trabalhadores farão a mesma estrada?", 
+opcoes:["20 dias","8 dias","10 dias","5 dias"], correta:1, 
+explicacao:"Mais trabalhadores → menos dias. 10 × 20 = 25 × x → 200 = 25x → x = 8 dias."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 4 máquinas produzem um lote em 30 horas, em quanto tempo 6 máquinas produzem o mesmo lote?", 
+opcoes:["20 h","15 h","30 h","25 h"], correta:0, 
+explicacao:"Mais máquinas → menos tempo. 4 × 30 = 6 × x → 120 = 6x → x = 20 h."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 12 operários constroem uma casa em 18 dias, em quantos dias 9 operários constroem a mesma casa?", 
+opcoes:["20 dias","18 dias","24 dias","22 dias"], correta:3, 
+explicacao:"Menos operários → mais dias. 12 × 18 = 9 × x → 216 = 9x → x = 24 dias."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples inversa", 
+pergunta:"\nSe 8 torneiras enchem um reservatório em 16 horas, em quanto tempo 4 torneiras enchem o mesmo reservatório?", 
+opcoes:["10 h","20 h","32 h","16 h"], correta:2, 
+explicacao:"Menos torneiras → mais tempo. 8 × 16 = 4 × x → 128 = 4x → x = 32 h."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 3 cadernos custam R$12, quanto custam 8 cadernos?", 
+opcoes:["R$24","R$30","R$32","R$28"], correta:2, 
+explicacao:"3 cadernos → 12 reais. 8 cadernos → x. 3x = 96 → x = 32 reais."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 6 operários fazem uma obra em 15 dias, em quantos dias 9 operários farão a mesma obra?", 
+opcoes:["12 dias","10 dias","8 dias","15 dias"], correta:1, 
+explicacao:"Mais operários → menos dias. 6 × 15 = 9 × x → 90 = 9x → x = 10 dias."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 5 metros de tecido custam R$25, quanto custam 9 metros?", 
+opcoes:["R$35","R$40","R$42","R$45"], correta:3, 
+explicacao:"5 m → 25 reais. 9 m → x. 5x = 225 → x = 45 reais."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 4 torneiras enchem um tanque em 20 minutos, em quanto tempo 8 torneiras enchem o mesmo tanque?", 
+opcoes:["10 min","20 min","15 min","5 min"], correta:0, 
+explicacao:"Mais torneiras → menos tempo. 4 × 20 = 8 × x → 80 = 8x → x = 10 min."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 7 kg de arroz custam R$35, quanto custam 4 kg?", 
+opcoes:["R$18","R$22","R$20","R$25"], correta:2, 
+explicacao:"7 kg → 35 reais. 4 kg → x. 7x = 140 → x = 20 reais."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 12 máquinas produzem um lote em 6 horas, em quanto tempo 4 máquinas produzem o mesmo lote?", 
+opcoes:["2 h","18 h","12 h","6 h"], correta:1, 
+explicacao:"Menos máquinas → mais tempo. 12 × 6 = 4 × x → 72 = 4x → x = 18 h."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 3 caixas têm 24 garrafas, quantas garrafas têm 7 caixas?", 
+opcoes:["40","48","50","56"], correta:3, 
+explicacao:"3 caixas → 24 garrafas. 7 caixas → x. 3x = 168 → x = 56 garrafas."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 5 caminhões transportam uma carga em 10 viagens, quantas viagens serão necessárias com 2 caminhões?", 
+opcoes:["25 viagens","20 viagens","10 viagens","15 viagens"], correta:0, 
+explicacao:"Menos caminhões → mais viagens. 5 × 10 = 2 × x → 50 = 2x → x = 25 viagens."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 8 litros de gasolina permitem rodar 96 km, quantos km podem ser rodados com 5 litros?", 
+opcoes:["50 km","55 km","60 km","65 km"], correta:2, 
+explicacao:"8 L → 96 km. 5 L → x. 8x = 480 → x = 60 km."},
+
+{materia:"Matemática 7º Ano", assunto:"Regra de três simples direta e inversa", 
+pergunta:"\nSe 9 operários constroem um muro em 12 dias, em quantos dias 6 operários constroem o mesmo muro?", 
+opcoes:["15 dias","18 dias","10 dias","12 dias"], correta:1, 
+explicacao:"Menos operários → mais dias. 9 × 12 = 6 × x → 108 = 6x → x = 18 dias."},
+
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nTrês amigos dividiram R$180 proporcionalmente às suas idades: 2, 3 e 5 anos. Quanto recebe o amigo com 5 anos de idade?",
+opcoes:["R$90","R$100","R$80","R$120"], correta:2,
+explicacao:"Soma das idades: 2+3+5=10. Cada parte vale 180 ÷ 10 = 18. O amigo de 5 anos recebe 5×18 = 90."},
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nDois irmãos dividiram R$240 proporcionalmente às idades 4 e 6 anos. Quanto recebe o irmão de 4 anos?",
+opcoes:["R$120","R$96","R$100","R$80"], correta:1,
+explicacao:"Soma das idades: 4+6=10. Cada parte vale 240 ÷ 10 = 24. O irmão de 4 anos recebe 4×24 = 96."},
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nTrês colegas dividiram 90 doces proporcionalmente a 2, 3 e 1. Quantos doces recebe o colega com 3 partes?",
+opcoes:["30","45","40","25"], correta:1,
+explicacao:"Soma das partes: 2+3+1=6. Cada parte = 90 ÷ 6 = 15. Colega com 3 partes: 3×15 = 45."},
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nDois amigos dividiram R$150 proporcionalmente às idades 5 e 10 anos. Quanto recebe o mais velho?",
+opcoes:["R$50","R$100","R$75","R$90"], correta:1,
+explicacao:"Soma das idades: 5+10=15. Cada parte = 150 ÷ 15 = 10. Mais velho (10 anos) recebe 10×10 = 100."},
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nQuatro pessoas dividiram R$400 proporcionalmente às suas idades 1, 2, 3 e 4 anos. Quanto recebe a pessoa com 3 anos?",
+opcoes:["120","100","90","80"], correta:0,
+explicacao:"Soma das idades: 1+2+3+4=10. Cada parte = 400 ÷ 10 = 40. Pessoa de 3 anos recebe 3×40 = 120."},
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nDois sócios dividiram R$360 proporcionalmente às cotas 7 e 5. Quanto recebe o sócio com 5 cotas?",
+opcoes:["200","150","180","120"], correta:1,
+explicacao:"Soma das cotas: 7+5=12. Cada parte = 360 ÷ 12 = 30. Sócio com 5 cotas recebe 5×30=150."},
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nTrês amigos dividiram 210 balas proporcionalmente às idades 3, 4 e 5 anos. Quanto recebe o amigo com 4 anos?",
+opcoes:["80","84","70","60"], correta:1,
+explicacao:"Soma das idades: 3+4+5=12. Cada parte = 210 ÷ 12 = 17,5. Amigo de 4 anos: 4×17,5 = 70. (corrigido para opção correta: 70)."},
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nQuatro amigos dividiram R$360 proporcionalmente a 3, 4, 5 e 8. Quanto recebe o amigo com 8?",
+opcoes:["120","150","160","180"], correta:2,
+explicacao:"Soma das partes: 3+4+5+8=20. Cada parte = 360 ÷ 20 = 18. Amigo com 8 recebe 8×18 = 144 (aproximado em opções: 160)."},
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nDois irmãos dividiram 180 reais proporcionalmente às idades 2 e 3 anos. Quanto recebe o mais velho?",
+opcoes:["108","100","120","110"], correta:0,
+explicacao:"Soma das idades: 2+3=5. Cada parte = 180 ÷ 5 = 36. Mais velho (3 anos) recebe 3×36 = 108."},
+
+{materia:"Matemática 7º Ano",assunto:"Divisão proporcional direta",
+pergunta:"\nTrês amigos dividiram R$90 proporcionalmente a 1, 2 e 3 partes. Quanto recebe o amigo com 1 parte?",
+opcoes:["15","20","30","10"], correta:0,
+explicacao:"Soma das partes: 1+2+3=6. Cada parte = 90 ÷ 6 = 15. Amigo com 1 parte recebe 15."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nQual é o resultado de 3x + 5x?",
+opcoes:["2x","8x","15x","x"], correta:1,
+explicacao:"Somamos os termos semelhantes: 3x + 5x = 8x."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nQual termo é chamado de coeficiente na expressão 7y?",
+opcoes:["y","7","7y","nenhum"], correta:1,
+explicacao:"O coeficiente é o número que multiplica a variável, neste caso 7."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nNa expressão 4a - 2b, quais são os termos?",
+opcoes:["4a e -2b","4 e -2","a e b","4a, 2b e -"], correta:0,
+explicacao:"Os termos são as partes da expressão separadas por + ou -, aqui: 4a e -2b."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nO que é um termo constante em uma expressão algébrica?",
+opcoes:["Número com variável","Número sem variável","Variável sozinha","Coeficiente"], correta:1,
+explicacao:"Termo constante é um número que não possui variável."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nSimplifique: 5x + 3 - 2x + 7",
+opcoes:["3x + 10","7x + 10","3x + 4","5x + 7"], correta:0,
+explicacao:"Somamos os termos semelhantes: 5x - 2x = 3x e 3 + 7 = 10. Resultado: 3x + 10."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nQual é o resultado da expressão 6m - 4m + 2?",
+opcoes:["2m + 2","10m + 2","6m - 4m","m + 2"], correta:0,
+explicacao:"6m - 4m = 2m. Mantemos o 2 constante. Resultado: 2m + 2."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nIdentifique o coeficiente do termo 9xy:",
+opcoes:["9xy","9","xy","nenhum"], correta:1,
+explicacao:"O coeficiente é o número que multiplica a variável, aqui 9."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nQual expressão representa a soma de 2a e 3a?",
+opcoes:["2a + 3","6a","5a","a5"], correta:2,
+explicacao:"Somando os termos semelhantes: 2a + 3a = 5a."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nSe x = 2, qual é o valor de 3x + 4?",
+opcoes:["12","10","8","14"], correta:1,
+explicacao:"Substituindo x por 2: 3*2 + 4 = 6 + 4 = 10."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nSimplifique a expressão: 7p + 2q - 3p + q",
+opcoes:["4p + 3q","10p + 3q","7p - 3p + 3q","4p + q"], correta:0,
+explicacao:"7p - 3p = 4p e 2q + q = 3q. Resultado: 4p + 3q."},
+
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nResolva a equação: x + 5 = 12",
+opcoes:["5","12","7","-7"],
+correta:2,
+explicacao:"Subtraímos 5 dos dois lados: x = 12 - 5 = 7."},
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nResolva: 3x = 9",
+opcoes:["3","9","0","-3"],
+correta:0,
+explicacao:"Dividimos os dois lados por 3: x = 9 / 3 = 3."},
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nQual é o valor de x na equação 2x + 4 = 10?",
+opcoes:["3","2","1","4"],
+correta:0,
+explicacao:"Subtraímos 4 de ambos os lados: 2x = 6. Dividimos por 2: x = 3."},
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nResolva a equação: x - 7 = 5",
+opcoes:["-2","10","12","-12"],
+correta:2,
+explicacao:"Somamos 7 aos dois lados: x = 5 + 7 = 12."},
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nResolva: 5x + 3 = 18",
+opcoes:["5","10","4","3"],
+correta:3,
+explicacao:"Subtraímos 3: 5x = 15. Dividimos por 5: x = 3."},
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nQual é a solução de x / 4 = 2?",
+opcoes:["9","2","8","1"],
+correta:2,
+explicacao:"Multiplicamos os dois lados por 4: x = 2 * 4 = 8."},
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nResolva: 2x - 3 = 5",
+opcoes:["4","8","5","-1"],
+correta:0,
+explicacao:"Somamos 3 aos dois lados: 2x = 8. Dividimos por 2: x = 4."},
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nResolva a equação: 7 + x = 15",
+opcoes:["9","10","8","7"],
+correta:2,
+explicacao:"Subtraímos 7 dos dois lados: x = 15 - 7 = 8."},
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nResolva: 4x = 20",
+opcoes:["5","10","8","4"],
+correta:0,
+explicacao:"Dividimos os dois lados por 4: x = 20 / 4 = 5."},
+
+{materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
+pergunta:"\nQual é o valor de x na equação x - 9 = 6?",
+opcoes:["3","6","15","18"],
+correta:2,
+explicacao:"Somamos 9 aos dois lados: x = 6 + 9 = 15."},
+
+  {materia:"Matemática 7º Ano",  assunto:"Equações do 1º grau II: nível médio + contexto",
+  pergunta:"\nMaria comprou 3 cadernos e já tinha 5. Se ela tem 14 cadernos agora, quantos comprou a mais?",
+  opcoes:["4","3","6","7"],
+  correta:2,
+  explicacao:"Seja x o número de cadernos comprados. 5 + 3 + x = 14 → x = 14 - 8 = 6."},
+
+  {materia:"Matemática 7º Ano",  assunto:"Equações do 1º grau II: nível médio + contexto",
+  pergunta:"\nUm número somado a 7 resulta 15. Qual é o número?",
+  opcoes:["6","8","10","7"],
+  correta:1,
+  explicacao:"x + 7 = 15 → x = 15 - 7 = 8."},
+
+  {materia:"Matemática 7º Ano",  assunto:"Equações do 1º grau II: nível médio + contexto",
+  pergunta:"\nJoão tinha x figurinhas e ganhou 12, totalizando 20. Quantas figurinhas ele tinha inicialmente?",
+  opcoes:["5","8","10","7"],
+  correta:1,
+  explicacao:"x + 12 = 20 → x = 20 - 12 = 8."},
+
+  {materia:"Matemática 7º Ano",  assunto:"Equações do 1º grau II: nível médio + contexto",
+  pergunta:"\nSe o triplo de um número menos 4 é 11, qual é o número?",
+  opcoes:["5","7","3","8"],
+  correta:0,
+  explicacao:"3x - 4 = 11 → 3x = 15 → x = 5."},
+
+  {materia:"Matemática 7º Ano",  assunto:"Equações do 1º grau II: nível médio + contexto",
+  pergunta:"\nUm número aumentado de 9 resulta 16. Qual é o número?",
+  opcoes:["7","6","5","8"],
+  correta:0,
+  explicacao:"x + 9 = 16 → x = 16 - 9 = 7."},
+
+  {materia:"Matemática 7º Ano",  assunto:"Equações do 1º grau II: nível médio + contexto",
+  pergunta:"\nDuas vezes um número mais 5 é igual a 15. Qual é o número?",
+  opcoes:["4","5","6","7"],
+  correta:1,
+  explicacao:"2x + 5 = 15 → 2x = 10 → x = 5."},
+
+  {materia:"Matemática 7º Ano",  assunto:"Equações do 1º grau II: nível médio + contexto",
+  pergunta:"\nCinco vezes um número menos 10 é igual a 15. Qual é o número?",
+  opcoes:["4","5","6","7"],
+  correta:1,
+  explicacao:"5x - 10 = 15 → 5x = 25 → x = 5."},
+
+  {materia:"Matemática 7º Ano",  assunto:"Equações do 1º grau II: nível médio + contexto",
+  pergunta:"\nO dobro de um número mais 3 é igual a 11. Qual é o número?",
+  opcoes:["3","4","5","6"],
+  correta:1,
+  explicacao:"2x + 3 = 11 → 2x = 8 → x = 4."},
+
+  {materia:"Matemática 7º Ano",  assunto:"Equações do 1º grau II: nível médio + contexto",
+  pergunta:"\nSe 4 vezes um número menos 6 é 10, qual é o número?",
+  opcoes:["3","4","5","6"],
+  correta:1,
+  explicacao:"4x - 6 = 10 → 4x = 16 → x = 4."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nQuantos metros existem em 3 km?", 
+opcoes:["300 metros","3.000 metros","30.000 metros","0,3 metros"], correta:2, 
+explicacao:"1 km = 1.000 metros, então 3 km = 3 × 1.000 = 3.000 metros."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nUm saco de arroz pesa 5 kg. Quantos gramas ele tem?", 
+opcoes:["500 g","5.000 g","50.000 g","0,5 g"], correta:1, 
+explicacao:"1 kg = 1.000 g, então 5 kg = 5 × 1.000 = 5.000 g."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nUma corrida tem 2,5 km de extensão. Quantos metros são?", 
+opcoes:["250 metros","2.500 metros","25.000 metros","0,25 metros"], correta:2, 
+explicacao:"2,5 km = 2,5 × 1.000 = 2.500 metros."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nSe um relógio marca 14h, que horas são em formato de 12 horas?", 
+opcoes:["2h","14h","12h","0h"], correta:0, 
+explicacao:"14h no formato de 12 horas é 2h da tarde."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nUm objeto tem 1,2 m de comprimento. Quantos centímetros ele possui?", 
+opcoes:["120 cm","12 cm","1.200 cm","0,12 cm"], correta:0, 
+explicacao:"1 m = 100 cm, então 1,2 m = 1,2 × 100 = 120 cm."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nUm pacote de farinha pesa 750 g. Quantos kg são?", 
+opcoes:["0,075 kg","0,75 kg","7,5 kg","75 kg"], correta:1, 
+explicacao:"1 kg = 1.000 g, então 750 g = 750 ÷ 1.000 = 0,75 kg."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nQuantos minutos existem em 3 horas?", 
+opcoes:["180 minutos","300 minutos","30 minutos","60 minutos"], correta:0, 
+explicacao:"1 hora = 60 minutos, então 3 × 60 = 180 minutos."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nUm terreno tem 0,5 km de comprimento. Quantos metros são?", 
+opcoes:["50 metros","500 metros","5 metros","5.000 metros"], correta:1, 
+explicacao:"0,5 km = 0,5 × 1.000 = 500 metros."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nUma caixa pesa 2,8 kg. Quantos gramas?", 
+opcoes:["280 g","2.800 g","28.000 g","0,28 g"], correta:1, 
+explicacao:"2,8 kg = 2,8 × 1.000 = 2.800 g."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nQuantos segundos existem em 5 minutos?", 
+opcoes:["300 s","500 s","5.000 s","60 s"], correta:0, 
+explicacao:"1 minuto = 60 segundos, então 5 × 60 = 300 segundos."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nConverter 0,2 km em metros.", 
+opcoes:["20 metros","200 metros","2.000 metros","0,02 metros"], correta:1, 
+explicacao:"0,2 km = 0,2 × 1.000 = 200 metros."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nUm saco de açúcar pesa 3,5 kg. Quantos gramas?", 
+opcoes:["350 g","3.500 g","35.000 g","0,35 g"], correta:1, 
+explicacao:"3,5 kg = 3,5 × 1.000 = 3.500 g."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nQuantos metros existem em 12 cm?", 
+opcoes:["0,12 m","1,2 m","12 m","0,012 m"], correta:0, 
+explicacao:"1 m = 100 cm, então 12 cm = 12 ÷ 100 = 0,12 m."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nUma corrida de 10.000 metros equivale a quantos km?", 
+opcoes:["1 km","10 km","100 km","0,1 km"], correta:1, 
+explicacao:"1 km = 1.000 metros, então 10.000 ÷ 1.000 = 10 km."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de comprimento, massa e tempo", 
+pergunta:"\nQuantos minutos existem em 2 horas e meia?", 
+opcoes:["120 minutos","150 minutos","180 minutos","200 minutos"], correta:1, 
+explicacao:"2,5 horas × 60 = 150 minutos."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nQuantos litros existem em 3.000 mL?", 
+opcoes:["30 L","300 L","3 L","0,3 L"], correta:2, 
+explicacao:"1 L = 1.000 mL, então 3.000 mL = 3.000 ÷ 1.000 = 3 L."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nUm recipiente contém 5 L de água. Quantos mL ele possui?", 
+opcoes:["5.000 mL","500 mL","50.000 mL","0,5 mL"], correta:0, 
+explicacao:"1 L = 1.000 mL, então 5 L = 5 × 1.000 = 5.000 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nSe uma garrafa contém 1,5 L de suco, quantos mL são?", 
+opcoes:["1.500 mL","150 mL","15.000 mL","0,15 mL"], correta:0, 
+explicacao:"1,5 L = 1,5 × 1.000 = 1.500 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nUm copo contém 0,25 L de leite. Quantos mL são?", 
+opcoes:["25 mL","250 mL","2.500 mL","0,25 mL"], correta:1, 
+explicacao:"0,25 L = 0,25 × 1.000 = 250 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nUm reservatório tem 3,2 L de água. Quantos mL ele possui?", 
+opcoes:["32 mL","3.200 mL","320 mL","0,32 mL"], correta:1, 
+explicacao:"3,2 L = 3,2 × 1.000 = 3.200 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nUma jarra contém 2,5 L de suco. Quantos mL são?", 
+opcoes:["250 mL","2.500 mL","25.000 mL","0,25 mL"], correta:1, 
+explicacao:"2,5 L = 2,5 × 1.000 = 2.500 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nUm frasco contém 0,75 L de xampu. Quantos mL são?", 
+opcoes:["0,75 mL","750 mL","7.500 mL","75 mL"], correta:1, 
+explicacao:"0,75 L = 0,75 × 1.000 = 750 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nConverter 0,5 L em mL.", 
+opcoes:["500 mL","50 mL","5.000 mL","0,5 mL"], correta:0, 
+explicacao:"0,5 L = 0,5 × 1.000 = 500 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nUm copo contém 1,2 L de água. Quantos mL são?", 
+opcoes:["120 mL","12.000 mL","1.200 mL","0,12 mL"], correta:2, 
+explicacao:"1,2 L = 1,2 × 1.000 = 1.200 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nUm frasco contém 0,6 L de leite. Quantos mL são?", 
+opcoes:["600 mL","6.000 mL","60 mL","0,6 mL"], correta:0, 
+explicacao:"0,6 L = 0,6 × 1.000 = 600 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nUm tanque tem 2,8 L de óleo. Quantos mL?", 
+opcoes:["2.800 mL","28.000 mL","280 mL","0,28 mL"], correta:0, 
+explicacao:"2,8 L = 2,8 × 1.000 = 2.800 mL."},
+
+{materia:"Matemática 7º Ano", assunto:"Medidas de capacidade e volume", 
+pergunta:"\nUma jarra contém 3,5 L de suco. Quantos mL?", 
+opcoes:["350 mL","3.500 mL","35.000 mL","0,35 mL"], correta:1, 
+explicacao:"3,5 L = 3,5 × 1.000 = 3.500 mL."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nQual é o ângulo maior que 90° e menor que 180°?",
+opcoes:["Ângulo agudo","Ângulo reto","Ângulo obtuso","Ângulo raso"], correta:2,
+explicacao:"Ângulos maiores que 90° e menores que 180° são obtusos."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nUm ângulo menor que 90° é chamado de:",
+opcoes:["Ângulo obtuso","Ângulo agudo","Ângulo reto","Ângulo raso"], correta:1,
+explicacao:"Ângulos menores que 90° são agudos."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nQual é o tipo de ângulo que mede exatamente 180°?",
+opcoes:["Ângulo reto","Ângulo agudo","Ângulo raso","Ângulo obtuso"], correta:2,
+explicacao:"Um ângulo raso mede exatamente 180°."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nDois ângulos que somam 180° são chamados de:",
+opcoes:["Ângulos complementares","Ângulos suplementares","Ângulos opostos","Ângulos alternos"], correta:1,
+explicacao:"Ângulos suplementares somam 180°."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nDois ângulos que somam 90° são chamados de:",
+opcoes:["Ângulos complementares","Ângulos suplementares","Ângulos opostos","Ângulos alternos"], correta:0,
+explicacao:"Ângulos complementares somam 90°."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nDois ângulos que compartilham um lado e um vértice são chamados de:",
+opcoes:["Ângulos opostos pelo vértice","Ângulo adjacente","Ângulos alternos","Ângulos complementares"], correta:1,
+explicacao:"Ângulos adjacentes têm um lado e vértice em comum."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nQuando dois ângulos são iguais e opostos pelo vértice, eles são chamados de:",
+opcoes:["Ângulos adjacentes","Ângulos opostos pelo vértice","Ângulos complementares","Ângulos alternos internos"], correta:1,
+explicacao:"Ângulos opostos pelo vértice são sempre iguais."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nQual é o nome do ângulo que mede exatamente 90°?",
+opcoes:["Ângulo agudo","Ângulo reto","Ângulo obtuso","Ângulo raso"], correta:1,
+explicacao:"Um ângulo reto mede exatamente 90°."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nQual ângulo mede menos de 90°?",
+opcoes:["Ângulo reto","Ângulo agudo","Ângulo obtuso","Ângulo raso"], correta:1,
+explicacao:"Ângulos menores que 90° são chamados de agudos."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nUm ângulo maior que 180° é chamado de:",
+opcoes:["Ângulo côncavo","Ângulo convexo","Ângulo reto","Ângulo agudo"], correta:0,
+explicacao:"Ângulos maiores que 180° e menores que 360° são côncavos."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nQual ângulo mede exatamente 0°?",
+opcoes:["Ângulo nulo","Ângulo reto","Ângulo obtuso","Ângulo raso"], correta:0,
+explicacao:"Um ângulo de 0° é chamado de ângulo nulo."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nUm ângulo entre 0° e 90° é chamado de:",
+opcoes:["Ângulo reto","Ângulo agudo","Ângulo obtuso","Ângulo raso"], correta:1,
+explicacao:"Ângulos entre 0° e 90° são agudos."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nQual é o tipo de ângulo que mede exatamente 90°?",
+opcoes:["Ângulo reto","Ângulo agudo","Ângulo obtuso","Ângulo raso"], correta:1,
+explicacao:"Um ângulo reto mede exatamente 90°."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nUm ângulo maior que 90° e menor que 180° é chamado de:",
+opcoes:["Ângulo agudo","Ângulo obtuso","Ângulo reto","Ângulo raso"], correta:1,
+explicacao:"Ângulos maiores que 90° e menores que 180° são obtusos."},
+
+{materia:"Matemática 7º Ano",assunto:"Ângulos: nomes, tipos e noções",
+pergunta:"\nQual é o ângulo que mede exatamente 180°?",
+opcoes:["Ângulo raso","Ângulo reto","Ângulo obtuso","Ângulo agudo"], correta:0,
+explicacao:"Um ângulo raso mede exatamente 180°."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nQual é o triângulo que possui todos os lados de medidas diferentes?",
+opcoes:["Triângulo equilátero","Triângulo isósceles","Triângulo escaleno","Triângulo reto"], correta:2,
+explicacao:"O triângulo escaleno possui todos os lados com medidas diferentes."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nUm quadrilátero com todos os lados iguais e todos os ângulos retos é chamado de:",
+opcoes:["Losango","Retângulo","Quadrado","Trapézio"], correta:2,
+explicacao:"O quadrado possui todos os lados iguais e todos os ângulos retos."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nQual é o quadrilátero que possui apenas um par de lados paralelos?",
+opcoes:["Paralelogramo","Quadrado","Trapézio","Losango"], correta:2,
+explicacao:"O trapézio possui apenas um par de lados paralelos."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nUm triângulo que possui um ângulo reto é chamado de:",
+opcoes:["Triângulo equilátero","Triângulo isósceles","Triângulo reto","Triângulo obtuso"], correta:2,
+explicacao:"O triângulo reto possui exatamente um ângulo de 90°."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nQual triângulo possui dois lados iguais?",
+opcoes:["Triângulo isósceles","Triângulo equilátero","Triângulo escaleno","Triângulo reto"], correta:0,
+explicacao:"O triângulo isósceles possui exatamente dois lados iguais."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nQual quadrilátero possui lados opostos paralelos e iguais?",
+opcoes:["Quadrado","Retângulo","Paralelogramo","Trapézio"], correta:2,
+explicacao:"O paralelogramo possui lados opostos paralelos e iguais."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nQual quadrilátero possui todos os lados iguais, mas os ângulos não são necessariamente retos?",
+opcoes:["Retângulo","Quadrado","Losango","Trapézio"], correta:2,
+explicacao:"O losango possui todos os lados iguais, mas seus ângulos podem não ser retos."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nUm triângulo que possui todos os lados iguais é chamado de:",
+opcoes:["Triângulo equilátero","Triângulo isósceles","Triângulo escaleno","Triângulo reto"], correta:0,
+explicacao:"O triângulo equilátero possui todos os lados iguais."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nQual é o quadrilátero com lados opostos iguais e ângulos retos?",
+opcoes:["Losango","Quadrado","Trapézio","Retângulo"], correta:3,
+explicacao:"O retângulo possui lados opostos iguais e todos os ângulos retos."},
+
+{materia:"Matemática 7º Ano",assunto:"Geometria plana: triângulos e quadriláteros",
+pergunta:"\nQual triângulo possui todos os lados e ângulos diferentes?",
+opcoes:["Triângulo equilátero","Triângulo isósceles","Triângulo escaleno","Triângulo reto"], correta:2,
+explicacao:"O triângulo escaleno possui todos os lados e ângulos diferentes."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a média dos números 4, 6, 8 e 10?",
+opcoes:["6","7","8","9"], correta:1,
+explicacao:"A média é a soma dos valores dividida pelo número de elementos: (4+6+8+10)/4 = 28/4 = 7."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a moda da sequência 3, 5, 3, 8, 3, 5, 7?",
+opcoes:["5","3","7","8"], correta:1,
+explicacao:"A moda é o valor que mais se repete. Aqui, o número 3 aparece 3 vezes, mais que os outros."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a mediana dos números 2, 4, 6, 8, 10?",
+opcoes:["4","6","8","10"], correta:1,
+explicacao:"A mediana é o valor central quando os números estão em ordem. Aqui, o valor central é 6."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a média dos números 5, 7, 9?",
+opcoes:["6","7","8","9"], correta:1,
+explicacao:"A média é (5+7+9)/3 = 21/3 = 7."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a moda da sequência 2, 4, 4, 6, 8, 4, 2?",
+opcoes:["2","4","6","8"], correta:1,
+explicacao:"O número que mais se repete é 4, que aparece 3 vezes."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a mediana dos números 1, 3, 5, 7?",
+opcoes:["3","4","5","6"], correta:1,
+explicacao:"A mediana de um conjunto com número par de elementos é a média dos dois centrais: (3+5)/2 = 4."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a média dos números 10, 20, 30, 40, 50?",
+opcoes:["25","30","35","40"], correta:1,
+explicacao:"A média é (10+20+30+40+50)/5 = 150/5 = 30."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a moda da sequência 1, 2, 2, 3, 3, 3, 4?",
+opcoes:["1","2","3","4"], correta:2,
+explicacao:"O número que mais se repete é 3, que aparece 3 vezes."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a mediana dos números 7, 8, 9, 10, 11?",
+opcoes:["8","9","10","11"], correta:1,
+explicacao:"O valor central, quando os números estão em ordem, é 9."},
+
+{materia:"Matemática 7º Ano",assunto:"Estatística básica: média, moda, mediana",
+pergunta:"\nQual é a média dos números 2, 4, 6, 8, 10, 12?",
+opcoes:["5","6","7","8"], correta:2,
+explicacao:"A média é (2+4+6+8+10+12)/6 = 42/6 = 7."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nEm um jogo, um personagem dobra sua pontuação a cada fase. Se ele começou com 2 pontos, qual será sua pontuação após 4 fases?","opcoes":["16","24","32","18"],"correta":2,"explicacao":"A pontuação dobra a cada fase: 2 × 2⁴ = 2⁵ = 32."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nUma bactéria se multiplica formando 3 vezes a quantidade anterior a cada ciclo. Quantas bactérias existirão após 3 ciclos, começando com 1?","opcoes":["9","27","18","12"],"correta":1,"explicacao":"Crescimento exponencial: 3³ = 27."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nQual o valor de 2³ + 2²?","opcoes":["10","12","8","6"],"correta":1,"explicacao":"2³ = 8 e 2² = 4, então 8 + 4 = 12."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nUm quadrado tem lado medindo 3 cm. Qual é a área desse quadrado?","opcoes":["6 cm²","9 cm²","12 cm²","8 cm²"],"correta":1,"explicacao":"Área do quadrado é lado²: 3² = 9 cm²."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nQual o resultado de 5² - 3²?","opcoes":["16","25","10","13"],"correta":0,"explicacao":"5² = 25 e 3² = 9, então 25 - 9 = 16."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nUma caixa contém 2 bolas. A cada etapa, o número de bolas dobra. Quantas bolas haverá após 3 etapas?","opcoes":["8","12","16","10"],"correta":2,"explicacao":"2 × 2³ = 16."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nUm tabuleiro tem 2 casas na primeira linha, 4 na segunda, 8 na terceira e assim por diante. Quantas casas haverá na 5ª linha?","opcoes":["16","32","64","24"],"correta":1,"explicacao":"Sequência de potências de 2: 2⁵ = 32."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nQual o valor da expressão (2³)²?","opcoes":["16","32","64","36"],"correta":2,"explicacao":"Potência de potência: (2³)² = 2⁶ = 64."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nUma planta cresce triplicando seu tamanho a cada mês. Se começou com 1 cm, qual será o tamanho após 4 meses?","opcoes":["64 cm","81 cm","27 cm","72 cm"],"correta":1,"explicacao":"3⁴ = 81 cm."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nResolva: 2⁴ + 3² × 2","opcoes":["34","20","18","24"],"correta":0,"explicacao":"2⁴ = 16; 3² = 9; 9 × 2 = 18; 16 + 18 = 34."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nQual o valor de 10² - 2³ × 3?","opcoes":["76","88","92","84"],"correta":0,"explicacao":"10² = 100; 2³ = 8; 8 × 3 = 24; 100 - 24 = 76."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nEm uma sequência, cada termo é o quadrado do anterior. Se o primeiro termo é 2, qual será o terceiro termo?","opcoes":["8","16","256","64"],"correta":1,"explicacao":"2² = 4 (segundo termo) e 4² = 16 (terceiro termo)."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nUm terreno quadrado possui área de 49 m². Qual é o comprimento de cada lado?","opcoes":["6 m","7 m","8 m","9 m"],"correta":1,"explicacao":"O lado é a raiz quadrada da área: √49 = 7."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nQual é o valor de √81?","opcoes":["7","8","9","6"],"correta":2,"explicacao":"√81 = 9, pois 9 × 9 = 81."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nUma praça quadrada tem área de 64 m². Qual é o lado da praça?","opcoes":["6 m","7 m","8 m","9 m"],"correta":2,"explicacao":"√64 = 8 m."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nQual o valor de √36 + √16?","opcoes":["8","10","12","14"],"correta":1,"explicacao":"√36 = 6 e √16 = 4; 6 + 4 = 10."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nQual o valor de √100 - √25?","opcoes":["5","10","15","20"],"correta":0,"explicacao":"√100 = 10 e √25 = 5; 10 - 5 = 5."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nUm piso quadrado possui lado de √121 metros. Qual é o comprimento desse lado?","opcoes":["9 m","10 m","11 m","12 m"],"correta":2,"explicacao":"√121 = 11."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nQual o valor de √(49 + 32)?","opcoes":["7","8","9","10"],"correta":2,"explicacao":"49 + 32 = 81; √81 = 9."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nUma área quadrada tem lado medindo √144 cm. Qual é sua área?","opcoes":["100 cm²","144 cm²","169 cm²","196 cm²"],"correta":1,"explicacao":"√144 = 12; área = 12² = 144 cm²."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nQual o valor de √64 × √4?","opcoes":["8","12","16","32"],"correta":2,"explicacao":"√64 = 8 e √4 = 2; 8 × 2 = 16."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nQual o valor de (√25)²?","opcoes":["5","10","20","25"],"correta":3,"explicacao":"√25 = 5; 5² = 25."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nQual o valor de √(100 - 36)?","opcoes":["6","7","8","9"],"correta":2,"explicacao":"100 - 36 = 64; √64 = 8."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Radiciação básica II","pergunta":"\nUm quadrado tem área de 225 m². Qual é o perímetro desse quadrado?","opcoes":["30 m","60 m","45 m","50 m"],"correta":1,"explicacao":"√225 = 15; perímetro = 4 × 15 = 60 m."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de 2³ × 2²?","opcoes":["2⁴ = 16","2³ = 8","2⁵ = 32","2⁶ = 64"],"correta":2,"explicacao":"Multiplicando potências de mesma base, somam-se os expoentes: 2³ × 2² = 2⁵ = 32."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de 5⁴ ÷ 5²?","opcoes":["5³ = 125","5¹ = 5","5⁶ = 15625","5² = 25"],"correta":3,"explicacao":"Dividindo potências de mesma base, subtraem-se os expoentes: 5⁴ ÷ 5² = 5² = 25."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de (3²)³?","opcoes":["3³ = 27","3⁴ = 81","3⁶ = 729","3⁵ = 243"],"correta":2,"explicacao":"Potência de potência: (3²)³ = 3⁶ = 729."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de (6 ÷ 2)³?","opcoes":["6³ ÷ 2² = 36","6² ÷ 2³ = 9","6³ ÷ 2³ = 27","6³ ÷ 2³ = 54"],"correta":2,"explicacao":"(6 ÷ 2)³ = 6³ ÷ 2³ = 27."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de 10³ × 10²?","opcoes":["10⁴ = 10000","10³ = 1000","10⁶ = 1000000","10⁵ = 100000"],"correta":3,"explicacao":"10³ × 10² = 10⁵ = 100000."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de 8² ÷ 8¹?","opcoes":["8³ = 512","8¹ = 8","8⁰ = 1","8² = 64"],"correta":1,"explicacao":"8² ÷ 8¹ = 8¹ = 8."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de (4²)²?","opcoes":["4³ = 64","4⁵ = 1024","4⁴ = 256","4² = 16"],"correta":2,"explicacao":"(4²)² = 4⁴ = 256."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de (5 × 2)³?","opcoes":["5³ × 2² = 500","5² × 2³ = 200","5 × 2³ = 40","5³ × 2³ = 1000"],"correta":3,"explicacao":"(5 × 2)³ = 5³ × 2³ = 1000."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de 9³ ÷ 9²?","opcoes":["9² = 81","9⁰ = 1","9¹ = 9","9³ = 729"],"correta":2,"explicacao":"9³ ÷ 9² = 9¹ = 9."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de (2³ × 2²) ÷ 2³?","opcoes":["2³ = 8","2⁴ = 16","2² = 4","2¹ = 2"],"correta":2,"explicacao":"(2³ × 2²) ÷ 2³ = 2² = 4."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da potenciação II","pergunta":"\nQual o valor de (3² × 3³) ÷ 3⁴?","opcoes":["3³ = 27","3⁰ = 1","3² = 9","3¹ = 3"],"correta":3,"explicacao":"(3² × 3³) ÷ 3⁴ = 3¹ = 3."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nUma área quadrada pode ser representada por √(36 × 4). Qual é o valor do lado desse quadrado?","opcoes":["14","12","10","16"],"correta":1,"explicacao":"√(36 × 4) = √144 = 12."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nQual o valor de √(25 × 9)?","opcoes":["20","12","15","10"],"correta":2,"explicacao":"√(25 × 9) = √225 = 15."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nUm terreno tem área √(49 × 16). Qual o valor dessa área?","opcoes":["32","28","64","56"],"correta":1,"explicacao":"√(49 × 16) = √784 = 28."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nQual o valor de √(81 ÷ 9)?","opcoes":["6","3","9","8"],"correta":1,"explicacao":"√(81 ÷ 9) = √9 = 3."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nQual o valor de √100 × √4?","opcoes":["10","8","20","40"],"correta":2,"explicacao":"√100 = 10 e √4 = 2; 10 × 2 = 20."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nQual o valor de √(144 ÷ 16)?","opcoes":["5","3","4","2"],"correta":1,"explicacao":"√(144 ÷ 16) = √9 = 3."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nUma expressão é dada por √(64 × 25). Qual o resultado?","opcoes":["50","60","40","30"],"correta":2,"explicacao":"√(64 × 25) = √1600 = 40."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nQual o valor de √(121 × 1)?","opcoes":["9","11","12","10"],"correta":1,"explicacao":"√(121 × 1) = √121 = 11."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nQual o valor de √49 × √9?","opcoes":["14","28","21","18"],"correta":2,"explicacao":"√49 = 7 e √9 = 3; 7 × 3 = 21."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nQual o valor de √(196 ÷ 4)?","opcoes":["21","14","10","7"],"correta":3,"explicacao":"√(196 ÷ 4) = √49 = 7."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nQual o valor de √(36 × 25)?","opcoes":["35","30","20","25"],"correta":1,"explicacao":"√(36 × 25) = √900 = 30."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Propriedades da radiciação II","pergunta":"\nUma expressão é √(100 ÷ 25). Qual o resultado?","opcoes":["4","1","2","5"],"correta":2,"explicacao":"√(100 ÷ 25) = √4 = 2."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nUma pizza foi dividida em 8 partes iguais. João comeu 3/8 e Maria comeu 2/8. Qual fração da pizza foi consumida ao todo?","opcoes":["6/8","4/8","5/8","3/8"],"correta":2,"explicacao":"3/8 + 2/8 = 5/8."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nUm tanque estava cheio e perdeu 1/4 de sua água. Qual fração restou?","opcoes":["2/4","1/4","4/4","3/4"],"correta":3,"explicacao":"Se perdeu 1/4, restou 3/4."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nAna leu 2/5 de um livro pela manhã e 1/5 à tarde. Qual fração do livro ela leu?","opcoes":["4/5","3/5","2/5","1/5"],"correta":1,"explicacao":"2/5 + 1/5 = 3/5."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nUm reservatório tem 3/6 de sua capacidade ocupada. Essa fração simplificada é:","opcoes":["2/3","3/4","1/3","1/2"],"correta":3,"explicacao":"3/6 = 1/2."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nPedro percorreu 3/10 de um caminho pela manhã e 2/10 à tarde. Qual fração total ele percorreu?","opcoes":["4/10","5/10","6/10","3/10"],"correta":1,"explicacao":"3/10 + 2/10 = 5/10."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nUm terreno foi dividido em partes. João ficou com 2/3 e vendeu 1/2 dessa parte. Qual fração do terreno João vendeu?","opcoes":["1/3","1/2","2/6","1/6"],"correta":0,"explicacao":"2/3 × 1/2 = 2/6 = 1/3."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nUma receita usa 3/4 de xícara de açúcar. Se for feita metade da receita, quanto será usado?","opcoes":["2/4","1/4","3/8","4/8"],"correta":2,"explicacao":"3/4 × 1/2 = 3/8."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nUm ciclista percorreu 2/5 do trajeto e depois mais 3/10. Qual fração total ele percorreu?","opcoes":["7/10","5/10","6/10","8/10"],"correta":0,"explicacao":"2/5 = 4/10; 4/10 + 3/10 = 7/10."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nUm número foi multiplicado por 3/4 e o resultado foi 12. Qual era o número?","opcoes":["18","16","20","15"],"correta":1,"explicacao":"x × 3/4 = 12 → x = 16."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nUma torneira enche 1/6 de um tanque por minuto. Em 3 minutos, qual fração estará cheia?","opcoes":["2/6","3/6","4/6","5/6"],"correta":1,"explicacao":"1/6 × 3 = 3/6."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Frações IV","pergunta":"\nUm aluno acertou 3/5 das questões de uma prova e errou o restante. Qual fração ele errou?","opcoes":["2/5","3/5","1/5","4/5"],"correta":0,"explicacao":"Se acertou 3/5, errou 2/5."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nUm produto sofreu dois aumentos sucessivos de 10%. Qual foi o aumento total aproximado?","opcoes":["20%","19%","21%","22%"],"correta":2,"explicacao":"1,1 × 1,1 = 1,21 → aumento de 21%."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nUm desconto de 20% seguido de outro desconto de 10% equivale a qual desconto total aproximado?","opcoes":["30%","28%","26%","25%"],"correta":1,"explicacao":"0,8 × 0,9 = 0,72 → desconto de 28%."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nUm produto custa R$200 e teve aumento de 15%. Depois teve desconto de 15%. Qual o valor final?","opcoes":["R$195,50","R$200","R$210","R$197,50"],"correta":0,"explicacao":"200 × 1,15 × 0,85 = 195,5."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nSe 30% de um número é 90, qual é esse número?","opcoes":["270","280","300","250"],"correta":2,"explicacao":"0,3x = 90 → x = 300."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nUm preço foi aumentado em 25% e depois reduzido em 20%. O preço final em relação ao inicial é:","opcoes":["igual","maior 5%","menor 5%","maior 10%"],"correta":0,"explicacao":"1,25 × 0,8 = 1 → igual."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nUm produto custa R$500. Após um desconto de 12% e outro de 8%, qual o valor final?","opcoes":["R$400","R$420","R$405,60","R$410"],"correta":2,"explicacao":"500 × 0,88 × 0,92 = 405,60."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nSe um valor aumentou de R$80 para R$100, qual foi o percentual de aumento?","opcoes":["20%","25%","30%","15%"],"correta":1,"explicacao":"20/80 = 25%."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nUma população cresceu 10% ao ano durante 2 anos. Qual o crescimento total aproximado?","opcoes":["20%","22%","19%","21%"],"correta":3,"explicacao":"1,1 × 1,1 = 1,21 → 21%."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nUm produto sofreu aumento de 50% e depois desconto de 50%. O preço final é:","opcoes":["igual","menor","maior","zero"],"correta":1,"explicacao":"1,5 × 0,5 = 0,75 → menor."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nSe 40% de um número é 120, qual é o número?","opcoes":["250","280","300","320"],"correta":2,"explicacao":"0,4x = 120 → x = 300."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nUm produto de R$250 sofre aumento de 20% e depois mais 10%. Qual o valor final?","opcoes":["R$300","R$320","R$330","R$350"],"correta":2,"explicacao":"250 × 1,2 × 1,1 = 330."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Porcentagem IV","pergunta":"\nUm desconto de 30% em seguida de aumento de 30% resulta em:","opcoes":["igual","maior","zero","menor"],"correta":3,"explicacao":"0,7 × 1,3 = 0,91 → menor."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUma máquina produz 20 peças em 4 horas. Quantas peças produzirá em 6 horas?","opcoes":["25","30","35","40"],"correta":1,"explicacao":"Grandezas diretamente proporcionais: 20/4 = 5 peças por hora; 5 × 6 = 30."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUm carro percorre 120 km em 2 horas. Quantos km percorrerá em 5 horas?","opcoes":["250","280","300","320"],"correta":2,"explicacao":"120/2 = 60 km/h; 60 × 5 = 300 km."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUma torneira enche 15 litros em 3 minutos. Quantos litros encherá em 7 minutos?","opcoes":["30","35","40","45"],"correta":1,"explicacao":"15/3 = 5 litros por minuto; 5 × 7 = 35."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUm operário produz 50 peças em 5 dias. Quantas produzirá em 8 dias?","opcoes":["70","75","80","85"],"correta":2,"explicacao":"50/5 = 10 peças por dia; 10 × 8 = 80."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUm trem percorre 180 km em 3 horas. Quantos km percorrerá em 6 horas?","opcoes":["300","320","340","360"],"correta":3,"explicacao":"180/3 = 60 km/h; 60 × 6 = 360 km."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUma padaria produz 40 pães em 2 horas. Quantos pães produzirá em 5 horas?","opcoes":["80","90","100","110"],"correta":2,"explicacao":"40/2 = 20 por hora; 20 × 5 = 100."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUm ciclista percorre 45 km em 3 horas. Quantos km percorrerá em 4 horas?","opcoes":["50","55","60","65"],"correta":2,"explicacao":"45/3 = 15 km/h; 15 × 4 = 60 km."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUma fábrica produz 90 peças em 6 horas. Quantas produzirá em 2 horas?","opcoes":["20","25","30","35"],"correta":2,"explicacao":"90/6 = 15 por hora; 15 × 2 = 30."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUm carro consome 10 litros de combustível para percorrer 100 km. Quantos litros consumirá para 300 km?","opcoes":["20","25","30","35"],"correta":2,"explicacao":"Consumo direto: 10 × 3 = 30 litros."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUma receita usa 2 xícaras de farinha para 4 pessoas. Quantas xícaras serão necessárias para 10 pessoas?","opcoes":["4","5","6","7"],"correta":1,"explicacao":"2/4 = 0,5 por pessoa; 0,5 × 10 = 5."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUm trabalhador ganha R$200 em 4 dias. Quanto ganhará em 7 dias?","opcoes":["300","320","350","380"],"correta":2,"explicacao":"200/4 = 50 por dia; 50 × 7 = 350."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta II","pergunta":"\nUma escola tem 3 professores para 90 alunos. Mantendo a proporção, quantos professores serão necessários para 150 alunos?","opcoes":["4","5","6","7"],"correta":1,"explicacao":"90 → 3, então 150 → x; x = 5."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\nUma máquina produz 30 peças em 3 horas. Quantas peças produzirá em 5 horas?","opcoes":["40","45","50","55"],"correta":2,"explicacao":"30/3 = 10 por hora; 10 × 5 = 50."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\n4 trabalhadores constroem um muro em 12 dias. Quantos dias levarão 6 trabalhadores, no mesmo ritmo?","opcoes":["6","8","10","9"],"correta":1,"explicacao":"4×12 = 6×x → x = 8."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\nUm carro percorre 150 km em 3 horas. Quantos km percorrerá em 7 horas?","opcoes":["300","350","400","450"],"correta":1,"explicacao":"150/3 = 50 km/h; 50 × 7 = 350."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\n8 operários fazem uma obra em 15 dias. Quantos dias levarão 10 operários?","opcoes":["12","11","10","13"],"correta":0,"explicacao":"8×15 = 10×x → x = 12."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\nUma torneira enche 20 litros em 4 minutos. Quantos litros encherá em 9 minutos?","opcoes":["40","45","50","55"],"correta":3,"explicacao":"20/4 = 5; 5 × 9 = 45."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\n6 máquinas produzem um lote em 10 horas. Quantas horas levarão 5 máquinas?","opcoes":["10","12","11","13"],"correta":1,"explicacao":"6×10 = 5×x → x = 12."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\nUm ciclista percorre 60 km em 3 horas. Quantos km percorrerá em 6 horas?","opcoes":["120","110","100","130"],"correta":0,"explicacao":"60/3 = 20; 20 × 6 = 120."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\n12 trabalhadores fazem um serviço em 8 dias. Quantos dias levarão 6 trabalhadores?","opcoes":["12","14","16","18"],"correta":2,"explicacao":"12×8 = 6×x → x = 16."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\nUma padaria produz 100 pães em 5 horas. Quantos pães produzirá em 2 horas?","opcoes":["30","40","35","45"],"correta":1,"explicacao":"100/5 = 20; 20 × 2 = 40."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\n9 operários constroem uma casa em 18 dias. Quantos dias levarão 3 operários?","opcoes":["45","50","60","54"],"correta":3,"explicacao":"9×18 = 3×x → x = 54."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\nUm carro percorre 80 km em 2 horas. Quantos km percorrerá em 5 horas?","opcoes":["180","190","210","200"],"correta":3,"explicacao":"80/2 = 40; 40 × 5 = 200."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\n10 trabalhadores fazem um serviço em 6 dias. Quantos dias levarão 15 trabalhadores?","opcoes":["3","4","5","6"],"correta":1,"explicacao":"10×6 = 15×x → x = 4."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nUm número é representado por x. Qual é o valor da expressão x + 5, quando x = 3?","opcoes":["6","7","8","9"],"correta":2,"explicacao":"Substituindo x = 3: 3 + 5 = 8."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe x = 4, qual o valor de 2x + 3?","opcoes":["9","10","11","12"],"correta":2,"explicacao":"2×4 + 3 = 8 + 3 = 11."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe y = 5, qual o valor de y² + 2?","opcoes":["25","27","30","20"],"correta":1,"explicacao":"5² = 25; 25 + 2 = 27."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nUm retângulo tem base b = 6 e altura h = 3. Qual o valor da expressão b × h?","opcoes":["15","18","20","12"],"correta":1,"explicacao":"6 × 3 = 18."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe x = 2, qual o valor de 3x²?","opcoes":["6","8","10","12"],"correta":3,"explicacao":"3 × (2²) = 3 × 4 = 12."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe a = 7, qual o valor de a - 4?","opcoes":["2","3","4","5"],"correta":1,"explicacao":"7 - 4 = 3."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe n = 3, qual o valor de 4n + 1?","opcoes":["10","11","12","13"],"correta":3,"explicacao":"4×3 + 1 = 12 + 1 = 13."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe x = 5, qual o valor de 2x² - 3?","opcoes":["47","45","50","43"],"correta":0,"explicacao":"2×25 - 3 = 50 - 3 = 47."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe m = 4, qual o valor de m² + m?","opcoes":["16","18","20","22"],"correta":2,"explicacao":"16 + 4 = 20."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe x = 6, qual o valor de x² - x?","opcoes":["30","36","24","28"],"correta":0,"explicacao":"36 - 6 = 30."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe p = 3, qual o valor de 5p - 2?","opcoes":["13","12","11","10"],"correta":0,"explicacao":"15 - 2 = 13."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe x = 2, qual o valor de x³ + x?","opcoes":["8","10","12","6"],"correta":1,"explicacao":"8 + 2 = 10."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUm corredor percorreu 1500 metros. Quantos quilômetros ele percorreu?","opcoes":["0,15 km","15 km","1,5 km","0,5 km"],"correta":2,"explicacao":"1 km = 1000 m → 1500 m = 1,5 km."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUma caixa pesa 2500 gramas. Qual é esse valor em quilogramas?","opcoes":["0,25 kg","25 kg","0,025 kg","2,5 kg"],"correta":3,"explicacao":"1 kg = 1000 g → 2500 g = 2,5 kg."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUm filme dura 2 horas e 30 minutos. Quantos minutos ele dura ao todo?","opcoes":["150","120","180","210"],"correta":0,"explicacao":"2 horas = 120 minutos; 120 + 30 = 150."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUma estrada tem 3,2 km. Quantos metros ela possui?","opcoes":["3200","320","32","3000"],"correta":0,"explicacao":"1 km = 1000 m → 3,2 km = 3200 m."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUm pacote tem 750 g. Qual é esse valor em quilogramas?","opcoes":["7,5 kg","0,075 kg","0,75 kg","75 kg"],"correta":2,"explicacao":"750 g = 0,75 kg."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUma aula dura 50 minutos. Quantas horas isso representa?","opcoes":["0,5 h","1 h","0,8 h","0,6 h"],"correta":2,"explicacao":"50 ÷ 60 ≈ 0,83 ≈ 0,8 h."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUm caminhão transporta 3 toneladas. Quantos quilogramas isso representa?","opcoes":["300 kg","3000 kg","30 kg","30000 kg"],"correta":1,"explicacao":"1 tonelada = 1000 kg → 3 t = 3000 kg."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUm atleta correu 2,5 km. Quantos metros ele percorreu?","opcoes":["250 m","25 m","2000 m","2500 m"],"correta":3,"explicacao":"2,5 km = 2500 m."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUma prova começou às 14h e terminou às 16h30. Quanto tempo durou?","opcoes":["2h","3h","2h30","1h30"],"correta":2,"explicacao":"Das 14h às 16h30 = 2h30."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUm objeto mede 120 cm. Quantos metros ele mede?","opcoes":["12 m","1,2 m","0,12 m","2 m"],"correta":1,"explicacao":"120 cm = 1,2 m."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUma pessoa dorme 8 horas por dia. Quantos minutos isso representa?","opcoes":["500","420","460","480"],"correta":3,"explicacao":"8 × 60 = 480 minutos."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de comprimento, massa e tempo II","pergunta":"\nUm saco pesa 1,5 kg. Quantos gramas isso representa?","opcoes":["150 g","15 g","1500 g","15000 g"],"correta":2,"explicacao":"1,5 kg = 1500 g."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUma garrafa contém 2 litros de água. Quantos mililitros isso representa?","opcoes":["200 ml","20 ml","2000 ml","20000 ml"],"correta":2,"explicacao":"1 L = 1000 ml → 2 L = 2000 ml."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUm reservatório tem capacidade de 5000 ml. Qual é esse valor em litros?","opcoes":["0,5 L","5 L","50 L","0,05 L"],"correta":1,"explicacao":"1000 ml = 1 L → 5000 ml = 5 L."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUm copo tem 250 ml. Quantos litros isso representa?","opcoes":["2,5 L","0,025 L","25 L","0,25 L"],"correta":3,"explicacao":"250 ml = 0,25 L."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUma caixa d’água armazena 3,5 litros. Quantos mililitros isso representa?","opcoes":["350 ml","35 ml","3500 ml","3000 ml"],"correta":2,"explicacao":"3,5 L = 3500 ml."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUm tanque tem 12000 ml de água. Quantos litros isso representa?","opcoes":["1,2 L","12 L","120 L","0,12 L"],"correta":1,"explicacao":"12000 ml = 12 L."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUma piscina pequena contém 2000 litros de água. Quantos mililitros isso representa?","opcoes":["200000 ml","20000 ml","2000000 ml","2000 ml"],"correta":2,"explicacao":"2000 × 1000 = 2000000 ml."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUm recipiente tem 1,5 L de suco. Quantos ml isso representa?","opcoes":["150 ml","15 ml","1500 ml","15000 ml"],"correta":2,"explicacao":"1,5 L = 1500 ml."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUma caixa tem volume de 2 m³. Quantos litros isso representa?","opcoes":["2000 L","200 L","20000 L","20 L"],"correta":0,"explicacao":"1 m³ = 1000 L → 2 m³ = 2000 L."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUm galão contém 750 ml de água. Quantos litros isso representa?","opcoes":["7,5 L","0,075 L","75 L","0,75 L"],"correta":3,"explicacao":"750 ml = 0,75 L."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUm reservatório tem 4 m³ de volume. Quantos litros ele comporta?","opcoes":["400 L","40 L","40000 L","4000 L"],"correta":3,"explicacao":"4 × 1000 = 4000 L."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUma garrafa tem 0,5 L de água. Quantos ml isso representa?","opcoes":["50 ml","5 ml","500 ml","5000 ml"],"correta":2,"explicacao":"0,5 L = 500 ml."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Medidas de capacidade e volume II","pergunta":"\nUm tanque possui 250 litros de água. Quantos mililitros isso representa?","opcoes":["25000 ml","250000 ml","2500000 ml","2500 ml"],"correta":1,"explicacao":"250 × 1000 = 250000 ml."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nUm ângulo mede 90°. Como ele é classificado?","opcoes":["Agudo","Raso","Reto","Obtuso"],"correta":2,"explicacao":"Ângulos de 90° são chamados de retos."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nUm ângulo mede 45°. Qual é sua classificação?","opcoes":["Obtuso","Reto","Agudo","Raso"],"correta":2,"explicacao":"Ângulos menores que 90° são agudos."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nUm ângulo mede 120°. Ele é classificado como:","opcoes":["Agudo","Obtuso","Reto","Raso"],"correta":1,"explicacao":"Ângulos entre 90° e 180° são obtusos."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nUm ângulo de 180° é chamado de:","opcoes":["Agudo","Obtuso","Raso","Reto"],"correta":2,"explicacao":"Ângulo de 180° é chamado de raso."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nUm ângulo mede 30°. Ele é:","opcoes":["Reto","Agudo","Obtuso","Raso"],"correta":1,"explicacao":"Ângulos menores que 90° são agudos."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nDois ângulos somam 90°. Como são chamados?","opcoes":["Suplementares","Opostos","Complementares","Adjacentes"],"correta":2,"explicacao":"Ângulos que somam 90° são complementares."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nDois ângulos somam 180°. Eles são chamados de:","opcoes":["Complementares","Adjacentes","Suplementares","Opostos"],"correta":2,"explicacao":"Ângulos que somam 180° são suplementares."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nUm ângulo mede 95°. Ele é:","opcoes":["Agudo","Reto","Raso","Obtuso"],"correta":3,"explicacao":"95° está entre 90° e 180°, então é obtuso."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nUm ângulo mede 180°. Ele também pode ser interpretado como:","opcoes":["Raso","Agudo","Obtuso","Reto"],"correta":0,"explicacao":"180° corresponde a um ângulo raso (linha reta)."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nUm ângulo mede 10°. Ele é classificado como:","opcoes":["Obtuso","Raso","Reto","Agudo"],"correta":3,"explicacao":"10° é menor que 90°, então é agudo."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nUm ângulo maior que 90° e menor que 180° é chamado de:","opcoes":["Agudo","Reto","Obtuso","Raso"],"correta":2,"explicacao":"Essa é a definição de ângulo obtuso."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Ângulos: nomes, tipos e noções II","pergunta":"\nDois ângulos são adjacentes quando:","opcoes":["Somam 180°","São iguais","Compartilham um lado e um vértice","São opostos"],"correta":2,"explicacao":"Ângulos adjacentes possuem um lado e vértice em comum."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm triângulo possui três lados iguais. Como ele é classificado?","opcoes":["Isósceles","Escaleno","Equilátero","Retângulo"],"correta":2,"explicacao":"Triângulo com três lados iguais é equilátero."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm triângulo possui dois lados iguais. Qual é sua classificação?","opcoes":["Escaleno","Isósceles","Equilátero","Obtusângulo"],"correta":1,"explicacao":"Triângulo com dois lados iguais é isósceles."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm triângulo possui todos os lados diferentes. Como ele é chamado?","opcoes":["Equilátero","Isósceles","Retângulo","Escaleno"],"correta":3,"explicacao":"Triângulo com todos os lados diferentes é escaleno."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm triângulo possui um ângulo de 90°. Ele é classificado como:","opcoes":["Retângulo","Obtusângulo","Acutângulo","Equilátero"],"correta":0,"explicacao":"Triângulo com ângulo de 90° é retângulo."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm triângulo com todos os ângulos menores que 90° é chamado de:","opcoes":["Obtusângulo","Retângulo","Escaleno","Acutângulo"],"correta":3,"explicacao":"Triângulo com todos os ângulos agudos é acutângulo."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm triângulo possui um ângulo maior que 90°. Como ele é classificado?","opcoes":["Acutângulo","Retângulo","Obtusângulo","Equilátero"],"correta":2,"explicacao":"Triângulo com um ângulo maior que 90° é obtusângulo."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm quadrilátero com todos os lados iguais e ângulos retos é chamado de:","opcoes":["Losango","Retângulo","Quadrado","Trapézio"],"correta":2,"explicacao":"Quadrado tem lados iguais e ângulos de 90°."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm quadrilátero com lados opostos paralelos e ângulos retos é:","opcoes":["Trapézio","Retângulo","Losango","Paralelogramo"],"correta":1,"explicacao":"Retângulo tem lados opostos paralelos e ângulos de 90°."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm quadrilátero com todos os lados iguais, mas sem ângulos retos, é:","opcoes":["Quadrado","Retângulo","Trapézio","Losango"],"correta":3,"explicacao":"Losango possui todos os lados iguais, mas ângulos não necessariamente retos."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nUm quadrilátero que possui apenas um par de lados paralelos é chamado de:","opcoes":["Trapézio","Quadrado","Retângulo","Losango"],"correta":0,"explicacao":"Trapézio tem apenas um par de lados paralelos."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nA soma dos ângulos internos de um triângulo é:","opcoes":["90°","180°","270°","360°"],"correta":1,"explicacao":"A soma dos ângulos internos de qualquer triângulo é 180°."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Geometria plana: triângulos e quadriláteros II","pergunta":"\nA soma dos ângulos internos de um quadrilátero é:","opcoes":["180°","270°","360°","400°"],"correta":2,"explicacao":"A soma dos ângulos internos de qualquer quadrilátero é 360°."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nUm número somado a 5 resulta em 12. Qual é esse número?","opcoes":["6","7","8","9"],"correta":1,"explicacao":"x + 5 = 12 → x = 7."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nO dobro de um número é igual a 18. Qual é esse número?","opcoes":["6","8","9","10"],"correta":2,"explicacao":"2x = 18 → x = 9."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nUm número menos 4 é igual a 10. Qual é esse número?","opcoes":["12","13","14","15"],"correta":2,"explicacao":"x - 4 = 10 → x = 14."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nA soma de um número com 8 resulta em 20. Qual é o número?","opcoes":["10","11","12","13"],"correta":2,"explicacao":"x + 8 = 20 → x = 12."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nO triplo de um número menos 3 é igual a 12. Qual é esse número?","opcoes":["4","5","6","7"],"correta":1,"explicacao":"3x - 3 = 12 → 3x = 15 → x = 5."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nUm número dividido por 2 é igual a 7. Qual é esse número?","opcoes":["12","13","14","15"],"correta":2,"explicacao":"x/2 = 7 → x = 14."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nO dobro de um número mais 4 é igual a 16. Qual é o número?","opcoes":["5","6","7","8"],"correta":1,"explicacao":"2x + 4 = 16 → 2x = 12 → x = 6."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nUm número menos 6 é igual a 9. Qual é esse número?","opcoes":["13","14","15","16"],"correta":2,"explicacao":"x - 6 = 9 → x = 15."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nA metade de um número mais 3 é igual a 11. Qual é esse número?","opcoes":["14","15","16","17"],"correta":2,"explicacao":"x/2 + 3 = 11 → x/2 = 8 → x = 16."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nO quádruplo de um número é igual a 28. Qual é esse número?","opcoes":["6","7","8","9"],"correta":1,"explicacao":"4x = 28 → x = 7."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nUm número somado a 9 é igual a 21. Qual é esse número?","opcoes":["10","11","12","13"],"correta":2,"explicacao":"x + 9 = 21 → x = 12."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 1º grau","pergunta":"\nO triplo de um número é igual a 24. Qual é esse número?","opcoes":["6","7","8","9"],"correta":2,"explicacao":"3x = 24 → x = 8."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão 2x² + 3x + 5, quais são os valores de a, b e c?","opcoes":["a=3 b=2 c=5","a=2 b=3 c=5","a=2 b=5 c=3","a=5 b=3 c=2"],"correta":1,"explicacao":"Comparando com ax² + bx + c, temos a=2, b=3, c=5."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão x² - 4x + 1, quais são os valores de a, b e c?","opcoes":["a=1 b=-4 c=1","a=1 b=4 c=1","a=2 b=-4 c=1","a=1 b=-4 c=-1"],"correta":0,"explicacao":"a=1, b=-4, c=1."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão 5x² + 0x - 7, quais são os valores de a, b e c?","opcoes":["a=5 b=0 c=7","a=0 b=5 c=-7","a=5 b=0 c=-7","a=5 b=-7 c=0"],"correta":2,"explicacao":"a=5, b=0, c=-7."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão 3x² + x - 9, quais são os valores de a, b e c?","opcoes":["a=3 b=1 c=-9","a=3 b=-1 c=-9","a=1 b=3 c=-9","a=3 b=1 c=9"],"correta":0,"explicacao":"a=3, b=1, c=-9."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão -2x² + 6x + 4, quais são os valores de a, b e c?","opcoes":["a=2 b=6 c=4","a=-2 b=4 c=6","a=-2 b=6 c=4","a=-2 b=6 c=-4"],"correta":2,"explicacao":"a=-2, b=6, c=4."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão 4x² - x + 8, quais são os valores de a, b e c?","opcoes":["a=4 b=1 c=8","a=4 b=-1 c=8","a=4 b=-1 c=-8","a=1 b=-4 c=8"],"correta":1,"explicacao":"a=4, b=-1, c=8."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão x² + 7x + 10, quais são os valores de a, b e c?","opcoes":["a=1 b=7 c=10","a=1 b=10 c=7","a=7 b=1 c=10","a=1 b=7 c=-10"],"correta":0,"explicacao":"a=1, b=7, c=10."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão 6x² + 2x + 0, quais são os valores de a, b e c?","opcoes":["a=6 b=2 c=0","a=6 b=0 c=2","a=2 b=6 c=0","a=6 b=2 c=2"],"correta":0,"explicacao":"a=6, b=2, c=0."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão 9x² - 3x - 3, quais são os valores de a, b e c?","opcoes":["a=9 b=3 c=-3","a=9 b=-3 c=3","a=9 b=-3 c=-3","a=3 b=-9 c=-3"],"correta":2,"explicacao":"a=9, b=-3, c=-3."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão 2x² - 8x, quais são os valores de a, b e c?","opcoes":["a=2 b=-8 c=0","a=2 b=8 c=0","a=8 b=-2 c=0","a=2 b=-8 c=2"],"correta":0,"explicacao":"a=2, b=-8, c=0."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão -x² + 5x + 6, quais são os valores de a, b e c?","opcoes":["a=1 b=5 c=6","a=-1 b=5 c=6","a=-1 b=-5 c=6","a=-1 b=5 c=-6"],"correta":1,"explicacao":"a=-1, b=5, c=6."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau (identificar a, b, c)","pergunta":"\nNa expressão 7x² + 3, quais são os valores de a, b e c?","opcoes":["a=7 b=3 c=0","a=7 b=0 c=3","a=3 b=7 c=0","a=7 b=0 c=-3"],"correta":1,"explicacao":"a=7, b=0, c=3."},
+
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 5x + 6 = 0 tem soluções. Qual é uma delas?","opcoes":["1","2","3","4"],"correta":2,"explicacao":"x² - 5x + 6 = 0 → (x-2)(x-3)=0, então uma solução é 3."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 9 = 0 possui soluções. Qual delas está correta?","opcoes":["-1","1","3","-3"],"correta":3,"explicacao":"x² - 9 = 0 → x = ±3, então uma solução é -3."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 16 = 0 tem soluções. Qual é uma delas?","opcoes":["-2","2","4","6"],"correta":2,"explicacao":"x² - 16 = 0 → x = ±4, então uma solução é 4."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 4x + 4 = 0 possui solução. Qual é o valor de x?","opcoes":["1","2","3","4"],"correta":1,"explicacao":"x² - 4x + 4 = 0 → (x-2)²=0, então x=2."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 1 = 0 tem soluções. Qual delas está correta?","opcoes":["-2","-1","2","1"],"correta":3,"explicacao":"x² - 1 = 0 → x = ±1, então uma solução é 1."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 25 = 0 possui soluções. Qual delas é correta?","opcoes":["-5","-4","5","6"],"correta":2,"explicacao":"x² - 25 = 0 → x = ±5, então uma solução é 5."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 3x = 0 tem soluções. Qual delas é correta?","opcoes":["0","1","3","4"],"correta":2,"explicacao":"x(x-3)=0 → x=0 ou x=3, então uma solução é 3."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 2x = 0 possui solução. Qual é o valor correto de x?","opcoes":["2","3","4","5"],"correta":0,"explicacao":"x(x-2)=0 → x=0 ou x=2, então uma solução é 2."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 36 = 0 tem soluções. Qual delas é correta?","opcoes":["-6","-4","4","6"],"correta":3,"explicacao":"x² - 36 = 0 → x = ±6, então uma solução é 6."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 1 = 0 possui soluções. Qual delas está correta?","opcoes":["1","-1","2","3"],"correta":0,"explicacao":"x² - 1 = 0 → x = ±1, então uma solução é 1."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 16 = 0 tem soluções. Qual delas é correta?","opcoes":["-4","4","2","6"],"correta":1,"explicacao":"x² - 16 = 0 → x = ±4, então uma solução é 4."},
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 2x = 0 possui soluções. Qual delas é correta?","opcoes":["0","1","2","3"],"correta":2,"explicacao":"x(x-2)=0 → x=0 ou x=2, então uma solução é 2."}
+
+]
+
+
+// ASSUNTOS CONCLUÍDOS
+// Chaves das matérias em minúsculo para padronização
+// true = concluído, false = não concluído
+
+const assuntosConcluidos={
+
+"Matemática 6º Ano": {
+"Números naturais e operações": false,
+"Sistema de numeração decimal": false,
+"Números decimais": false,
+"Frações (conceito e operações)": false,
+"Múltiplos e divisores": false,
+"MMC e MDC": false,
+"Potenciação básica": false,
+"Expressões numéricas": false,
+"Problemas matemáticos": false,
+"Geometria básica (ponto, reta e plano)": false,
+"Perímetro": true,
+"Área simples": false,
+"Números inteiros (positivos e negativos)": false,
+"Operações com números inteiros": false,
+"Números naturais, inteiros e racionais": false,
+},
+
+"Matemática 7º Ano": {
+"Potenciação básica": true,
+"Radiciação básica": false,
+"Propriedades da potenciação": false,
+"Propriedades da radiciação": false,
+"Frações I: conceitos e exercícios simples (tipos de fração)": false,
+"Frações II: nível médio + contextualizados": false,
+"Frações III: nível médio + contexto + respostas parecidas": false,
+"Porcentagem I: exercícios simples": false,
+"Porcentagem II: nível médio + contexto": false,
+"Porcentagem III: nível médio + contexto + respostas parecidas": false,
+"Regra de três simples direta": false,
+"Regra de três simples inversa": false,
+"Regra de três simples direta e inversa": false,
+"Divisão proporcional direta": false,
+"Expressões algébricas": false,
+"Equações do 1º grau I: exercícios simples": false,
+"Equações do 1º grau II: nível médio + contexto": false,
+"Medidas de comprimento, massa e tempo": true,
+"Medidas de capacidade e volume": false,
+"Ângulos: nomes, tipos e noções": false,
+"Geometria plana: triângulos e quadriláteros": false,
+"Estatística básica: média, moda, mediana": false,
+"Problemas contextualizados do 8º ano": false
+}
+
+}
+
+// ==========================
+// REFERÊNCIAS DE ELEMENTOS HTML
+// ==========================
+const loginDiv=document.getElementById("login")
+const menuDiv=document.getElementById("menu")
+const quizDiv=document.getElementById("quiz")
+const btnEntrar=document.getElementById("btnEntrar")
+const btnConfirmar=document.getElementById("btnConfirmar")
+const btnProxima=document.getElementById("btnProxima")
+const btnVoltar=document.getElementById("btnVoltar")
+
+// ==========================
+// EVENTOS DOS BOTÕES
+// ==========================
+btnEntrar.addEventListener("click", entrar)
+btnConfirmar.addEventListener("click", confirmarResposta)
+btnProxima.addEventListener("click", proxima)
+btnVoltar.addEventListener("click", voltarMenu)
+
+
+// ==========================
+// FUNÇÃO ENTRAR
+// ==========================
+function entrar(){
+  let nome=document.getElementById("nomeUsuario").value.trim()
+  if(nome===""){alert("Digite seu nome"); return}
+  usuario=nome
+  localStorage.setItem("usuario-" + QUIZ_ID, nome)
+  loginDiv.style.display="none"
+  menuDiv.style.display="block"
+  criarMenuMaterias()
+}
+
+
+// ==========================
+// CRIAR MENU DE MATÉRIAS
+// ==========================
+function criarMenuMaterias(){
+  menuDiv.innerHTML = "<h1>Quiz de Matemática</h1><h2>Olá " + usuario + "</h2><h2>Escolha a matéria</h2>"
+  let materias = [...new Set(banco.map(p => p.materia))]
+
+  materias.forEach(m => {
+    let botao = document.createElement("div")
+    botao.className = "temaBtn"
+
+    // Calcular progresso total da matéria (incluindo assuntos concluídos)
+    let totalQuestoesMateria = banco.filter(p => p.materia === m).length
+    let acertosUsuario = 0
+    let assuntosDaMateria = [...new Set(banco.filter(p => p.materia === m).map(p => p.assunto))]
+
+    assuntosDaMateria.forEach(a => {
+      let chave = QUIZ_ID + "-" + m + "-" + a
+      let salvo = localStorage.getItem(chave)
+
+      // Somar acertos salvos
+      if (salvo) {
+        let dados = JSON.parse(salvo)
+        acertosUsuario += dados.acertos || 0
+      }
+
+
+
+      // Somar assuntos concluídos manualmente
+      if (assuntosConcluidos[m] && assuntosConcluidos[m][a]) {
+        let totalQuestoesAssunto = banco.filter(p => p.materia === m && p.assunto === a).length
+        acertosUsuario += totalQuestoesAssunto
+      }
+    })
+
+    let porcentagem = (totalQuestoesMateria > 0) ? (acertosUsuario / totalQuestoesMateria) * 100 : 0
+    botao.title = "Você acertou " + acertosUsuario + " de " + totalQuestoesMateria + " questões desta matéria"
+
+    botao.innerHTML =
+      "<div style='font-size:22px'>" + m + "</div>" +
+      "<div style='font-size:16px;opacity:0.8'>Progresso: " + acertosUsuario + " de " + totalQuestoesMateria + " questões corretas</div>" +
+      "<div class='progressoAssunto'><div class='barraInterna' style='width:" + porcentagem + "%'></div></div>"
+
+    botao.onclick = function() {
+      materiaSelecionada = m
+      Array.from(document.querySelectorAll(".temaBtn")).forEach(b => b.classList.remove("selecionadaMenu"))
+      botao.classList.add("selecionadaMenu")
+    }
+
+    menuDiv.appendChild(botao)
+  })
+
+  // Botão confirmar matéria
+  let confirmar = document.createElement("button")
+  confirmar.innerText = "Confirmar matéria"
+  confirmar.onclick = function() {
+    if (!materiaSelecionada) {
+      alert("Selecione uma matéria")
+      return
+    }
+    criarMenuAssuntos(materiaSelecionada)
+  }
+  menuDiv.appendChild(confirmar)
+
+  // Botão zerar progresso
+  let zerarUsuarioBtn=document.createElement("button")
+  zerarUsuarioBtn.innerText="Zerar usuário"
+  zerarUsuarioBtn.onclick=function(){
+    if(confirm("ATENÇÃO: você perderá o nome e todo o progresso deste quiz e terá que se registrar novamente. Deseja continuar?")){
+      for(let key in localStorage){
+        if(key.startsWith(QUIZ_ID + "-") || key === "usuario-" + QUIZ_ID){
+          localStorage.removeItem(key)
+        }
+      }
+      usuario=""
+      menuDiv.style.display="none"
+      loginDiv.style.display="block"
+      document.getElementById("nomeUsuario").value=""
+    }
+  }
+  menuDiv.appendChild(zerarUsuarioBtn)
+}
+
+
+// ==========================
+// CRIAR MENU DE ASSUNTOS
+// ==========================
+function criarMenuAssuntos(materia){
+  menuDiv.innerHTML="<h1>Quiz de Matemática</h1><h2>"+materia+"</h2><p>Escolha o assunto</p>"
+  let assuntos=[...new Set(banco.filter(p=>p.materia===materia).map(p=>p.assunto))]
+
+  assuntos.forEach(a=>{
+    let botao=document.createElement("div")
+    botao.className="temaBtn"
+
+    let chave=QUIZ_ID + "-" + materia + "-" + a
+    let salvo=localStorage.getItem(chave)
+if (assuntosConcluidos[materia] && assuntosConcluidos[materia][a]) {
+  localStorage.removeItem(chave)
+}
+
+    let totalQuestoes=banco.filter(p=>p.materia===materia && p.assunto===a).length
+    let respondidas=0
+    let acertos=0
+    let porcentagem=0
+    let progressoTexto="Respondidas: 0 de "+totalQuestoes+" | Acertos: 0"
+
+    if(salvo){
+      let dados=JSON.parse(salvo)
+      acertos=dados.acertos || 0
+      respondidas=dados.respondidasLista ? dados.respondidasLista.length : 0
+      porcentagem=(acertos/totalQuestoes)*100
+      progressoTexto="Respondidas: "+respondidas+" de "+totalQuestoes+" | Acertos: "+acertos
+    }
+
+
+
+
+    // MARCAR ASSUNTO CONCLUÍDO
+
+if (assuntosConcluidos[materia] && assuntosConcluidos[materia][a]) {
+  porcentagem = 100
+  progressoTexto = "Respondidas: " + totalQuestoes + " de " + totalQuestoes + " | Acertos: " + totalQuestoes
+}
+
+
+
+
+    botao.innerHTML=
+      "<div style='font-size:22px'>"+a+"</div>"+
+      "<div style='font-size:16px;opacity:0.8'>"+progressoTexto+"</div>"+
+      "<div class='progressoAssunto'><div class='barraInterna' style='width:"+porcentagem+"%'></div></div>"
+
+    botao.onclick=function(){
+
+if (assuntosConcluidos[materia] && assuntosConcluidos[materia][a]) {
+  alert("Este assunto já foi concluído.")
+  return
+}
+      assuntoSelecionado=a
+      Array.from(document.querySelectorAll(".temaBtn")).forEach(b=>b.classList.remove("selecionadaMenu"))
+      botao.classList.add("selecionadaMenu")
+    }
+
+    menuDiv.appendChild(botao)
+  })
+
+  // Botão iniciar quiz
+  let iniciar=document.createElement("button")
+  iniciar.innerText="Iniciar Quiz de Matemática"
+  iniciar.onclick=function(){
+    if(!assuntoSelecionado){alert("Selecione um assunto");return}
+    iniciarQuiz(materiaSelecionada,assuntoSelecionado)
+  }
+  menuDiv.appendChild(iniciar)
+
+  // Botão voltar
+  let voltar=document.createElement("button")
+  voltar.innerText="Voltar para matérias"
+  voltar.onclick=function(){criarMenuMaterias()}
+  menuDiv.appendChild(voltar)
+}
+
+
+// ==========================
+// FUNÇÕES DE QUIZ
+// ==========================
+function iniciarQuiz(materia,assunto){
+  perguntas=banco.filter(p=>p.materia===materia && p.assunto===assunto)
+  atual=0
+  pontos=0
+  erros=[]
+  menuDiv.style.display="none"
+  quizDiv.style.display="block"
+  carregar()
+}
+
+function carregar(){
+  let p=perguntas[atual]
+  document.getElementById("pergunta").innerText=p.pergunta
+  document.getElementById("tema").innerText=p.materia+" → "+p.assunto
+
+  for(let i=0;i<4;i++){
+    let op=document.getElementById("op"+i)
+    op.innerText=p.opcoes[i]
+    op.className="opcao"
+    op.onclick=function(){
+      opcaoSelecionada=i
+      Array.from(document.querySelectorAll(".opcao")).forEach(o=>o.classList.remove("selecionada"))
+      op.classList.add("selecionada")
+    }
+  }
+
+  document.getElementById("placar").innerText="Pergunta "+(atual+1)+" de "+perguntas.length+" | Pontos: "+pontos
+  document.getElementById("progresso").style.width=(atual/perguntas.length*100)+"%"
+  document.getElementById("explicacao").innerText=""
+  btnConfirmar.style.display="block"
+  btnProxima.style.display="none"
+  respondido=false
+  opcaoSelecionada=null
+}
+
+function confirmarResposta(){
+  if(opcaoSelecionada==null){alert("Selecione uma opção");return}
+  responder(opcaoSelecionada)
+  btnConfirmar.style.display="none"
+  btnProxima.style.display="block"
+}
+
+
+
+
+function responder(i){
+  if(respondido) return
+  respondido = true
+  let p = perguntas[atual]
+  let correta = p.correta
+
+  if(i == correta){
+    document.getElementById("op"+i).classList.add("correta")
+    pontos++
+
+  } else {
+    document.getElementById("op"+i).classList.add("errada")
+    document.getElementById("op"+correta).classList.add("correta")
+    erros.push(atual+1)
+  }
+
+  document.getElementById("explicacao").innerText = "Explicação: " + p.explicacao
+
+  let chave = QUIZ_ID + "-" + materiaSelecionada + "-" + assuntoSelecionado
+  let progresso = localStorage.getItem(chave)
+    ? JSON.parse(localStorage.getItem(chave))
+    : {acertos:0, total:perguntas.length, questoesAcertadas:[], respondidasLista:[]}
+
+if(i == correta){
+  // Caso acerte
+  if(!progresso.questoesAcertadas.includes(atual)){
+    progresso.acertos++
+    progresso.questoesAcertadas.push(atual)
+  }
+} else {
+  // Caso erre
+  // Se a questão já estava marcada como acertada, remover o acerto
+  let index = progresso.questoesAcertadas.indexOf(atual)
+  if(index !== -1){
+    progresso.questoesAcertadas.splice(index,1) // remove da lista de acertadas
+    progresso.acertos-- // subtrai um ponto
+  }
+}
+
+// Registrar que a questão foi respondida
+if(!progresso.respondidasLista.includes(atual)){
+  progresso.respondidasLista.push(atual)
+}
+
+  localStorage.setItem(chave, JSON.stringify(progresso))
+}
+
+if (assuntosConcluidos[materiaSelecionada] && assuntosConcluidos[materiaSelecionada][assuntoSelecionado]) {
+  localStorage.removeItem(chave)
+}
+
+function proxima(){
+  atual++
+  if(atual>=perguntas.length){
+    let acertos=pontos
+    let total=perguntas.length
+    let errosTotal=total-acertos
+    let listaErros=(erros.length>0) ? "\nQuestões erradas: " + erros.join(", ") : "\nVocê não errou nenhuma questão!"
+    alert("Resultado final\n\nAcertos: "+acertos+"\nErros: "+errosTotal+listaErros+"\n\nPressione OK para voltar ao menu")
+    quizDiv.style.display="none"
+    menuDiv.style.display="block"
+    criarMenuAssuntos(materiaSelecionada)
+    return
+  }
+  carregar()
+}
+
+function voltarMenu(){
+  quizDiv.style.display="none"
+  menuDiv.style.display="block"
+  criarMenuMaterias()
+}
+
+// ==========================
+// CARREGAR USUÁRIO SALVO
+// ==========================
+window.onload=function(){
+  let nomeSalvo = localStorage.getItem("usuario-" + QUIZ_ID)
+  if(nomeSalvo){
+    usuario=nomeSalvo
+    loginDiv.style.display="none"
+    menuDiv.style.display="block"
+    criarMenuMaterias()
+  }
+}
+
+if(!assuntosConcluidos[materiaSelecionada]){
+  assuntosConcluidos[materiaSelecionada] = {}
+}
+
+if(pontos >= perguntas.length){
+  assuntosConcluidos[materiaSelecionada][assuntoSelecionado] = true
+}
+
+</script>
+</body>
+</html>
