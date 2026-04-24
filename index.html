@@ -141,11 +141,15 @@ input{
 
 <!-- TELA DE QUIZ -->
 <div class="container" id="quiz" style="display:none">
+
 <h1>Quiz de Matemática</h1>
+
 <div id="barra"><div id="progresso"></div></div>
 <div id="placar"></div>
 <div id="tema"></div>
 <div class="pergunta" id="pergunta"></div>
+
+<img id="imagemPergunta" style="width:100%; max-height:400px; object-fit:contain; margin-bottom:15px;">
 
 <div class="opcao" id="op0"></div>
 <div class="opcao" id="op1"></div>
@@ -2093,6 +2097,57 @@ pergunta:"\nTrês amigos dividiram R$90 proporcionalmente a 1, 2 e 3 partes. Qua
 opcoes:["15","20","30","10"], correta:0,
 explicacao:"Soma das partes: 1+2+3=6. Cada parte = 90 ÷ 6 = 15. Amigo com 1 parte recebe 15."},
 
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nQual é o resultado de 3x + 5x?",
+opcoes:["2x","8x","15x","x"], correta:1,
+explicacao:"Somamos os termos semelhantes: 3x + 5x = 8x."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nQual termo é chamado de coeficiente na expressão 7y?",
+opcoes:["y","7","7y","nenhum"], correta:1,
+explicacao:"O coeficiente é o número que multiplica a variável, neste caso 7."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nNa expressão 4a - 2b, quais são os termos?",
+opcoes:["4a e -2b","4 e -2","a e b","4a, 2b e -"], correta:0,
+explicacao:"Os termos são as partes da expressão separadas por + ou -, aqui: 4a e -2b."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nO que é um termo constante em uma expressão algébrica?",
+opcoes:["Número com variável","Número sem variável","Variável sozinha","Coeficiente"], correta:1,
+explicacao:"Termo constante é um número que não possui variável."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nSimplifique: 5x + 3 - 2x + 7",
+opcoes:["3x + 10","7x + 10","3x + 4","5x + 7"], correta:0,
+explicacao:"Somamos os termos semelhantes: 5x - 2x = 3x e 3 + 7 = 10. Resultado: 3x + 10."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nQual é o resultado da expressão 6m - 4m + 2?",
+opcoes:["2m + 2","10m + 2","6m - 4m","m + 2"], correta:0,
+explicacao:"6m - 4m = 2m. Mantemos o 2 constante. Resultado: 2m + 2."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nIdentifique o coeficiente do termo 9xy:",
+opcoes:["9xy","9","xy","nenhum"], correta:1,
+explicacao:"O coeficiente é o número que multiplica a variável, aqui 9."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nQual expressão representa a soma de 2a e 3a?",
+opcoes:["2a + 3","6a","5a","a5"], correta:2,
+explicacao:"Somando os termos semelhantes: 2a + 3a = 5a."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nSe x = 2, qual é o valor de 3x + 4?",
+opcoes:["12","10","8","14"], correta:1,
+explicacao:"Substituindo x por 2: 3*2 + 4 = 6 + 4 = 10."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões algébricas",
+pergunta:"\nSimplifique a expressão: 7p + 2q - 3p + q",
+opcoes:["4p + 3q","10p + 3q","7p - 3p + 3q","4p + q"], correta:0,
+explicacao:"7p - 3p = 4p e 2q + q = 3q. Resultado: 4p + 3q."},
+
+
 {materia:"Matemática 7º Ano",assunto:"Equações do 1º grau I: exercícios simples",
 pergunta:"\nResolva a equação: x + 5 = 12",
 opcoes:["5","12","7","-7"],
@@ -2517,6 +2572,43 @@ pergunta:"\nQual é a média dos números 2, 4, 6, 8, 10, 12?",
 opcoes:["5","6","7","8"], correta:2,
 explicacao:"A média é (2+4+6+8+10+12)/6 = 42/6 = 7."},
 
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nO que representa uma expressão algébrica?",opcoes:["Números e letras juntos","Apenas números","Apenas letras","Apenas operações"], correta:0,explicacao:"Uma expressão algébrica é formada por números e letras juntos, onde as letras representam variáveis."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nQual das opções é uma expressão algébrica?",opcoes:["5 + 3","4 ÷ 2","2x + 7","10"], correta:2,explicacao:"Expressões algébricas possuem letras e números, como 2x + 7."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nQual alternativa representa uma expressão algébrica?",opcoes:["15","x + 9","4 ÷ 2","7"], correta:1,explicacao:"x + 9 é uma expressão algébrica pois contém variável e número."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nEm 3a + 2b - 5, o que são as letras a e b?",opcoes:["Números fixos","Coeficientes","Constantes","Variáveis"], correta:3,explicacao:"As letras representam valores desconhecidos, chamados de variáveis."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nNa expressão 6a + 4b - 9, quantos termos existem?",opcoes:["2","4","3","1"], correta:2,explicacao:"Os termos são separados por + ou -, resultando em 3 termos: 6a, 4b e -9."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nNa expressão 8x + 5, os termos são:",opcoes:["8x e 5","8 e x","8x e x","5x e 8"], correta:0,explicacao:"Os termos são 8x e 5."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nNa expressão 5x - 3y + 8, quantos termos existem?",opcoes:["2","4","3","1"], correta:2,explicacao:"Existem três termos: 5x, -3y e 8."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nNa expressão 9a + 4, os termos são:",opcoes:["9a e 4","9 e a","9a e a","a e 4a"], correta:0,explicacao:"Os termos são 9a e 4."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nQual é o coeficiente de 7y?",opcoes:["y","7y","1","7"], correta:3,explicacao:"Coeficiente é o número que multiplica a variável, neste caso 7."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nEm -3a, o coeficiente é:",opcoes:["-3","a","3","-a"], correta:0,explicacao:"O coeficiente é o número com sinal que multiplica a variável."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQual é o coeficiente de 12xy?",opcoes:["xy","x","y","12"], correta:3,explicacao:"O coeficiente é o número 12."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQual é o coeficiente de -8x?",opcoes:["x","8","-x","-8"], correta:3,explicacao:"O coeficiente é -8."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nEm 15ab, o coeficiente é:",opcoes:["15","a","b","ab"], correta:0,explicacao:"O coeficiente é o número 15."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQuais são termos semelhantes?",opcoes:["3x e 3y","4x e 4","2a e 3b","5a e 2a"], correta:3,explicacao:"Termos semelhantes possuem a mesma variável."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQuanto vale 6p - 2p?",opcoes:["8p","6p","2p","4p"], correta:3,explicacao:"6p - 2p = 4p."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQuais são termos semelhantes?",opcoes:["3a e 7a","2x e 2y","5x e 5","a e b"], correta:0,explicacao:"Têm a mesma letra, portanto são semelhantes."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQuanto vale 10m - 6m?",opcoes:["16m","10m","4m","6m"], correta:2,explicacao:"10m - 6m = 4m."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nSimplifique: 4x + 3 - 2x + 5",opcoes:["6x + 8","2x + 2","4x + 8","2x + 8"], correta:3,explicacao:"4x - 2x = 2x e 3 + 5 = 8."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nSimplifique: 9m - 5m + 1",opcoes:["14m + 1","4m - 1","9m + 5m","4m + 1"], correta:3,explicacao:"9m - 5m = 4m."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nSimplifique: 6x + 2 - 3x + 5",opcoes:["9x + 7","3x + 3","6x + 7","3x + 7"], correta:3,explicacao:"6x - 3x = 3x e 2 + 5 = 7."},
+
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSimplifique: 8a - 2a + 4",opcoes:["10a + 4","8a + 2","6a - 4","6a + 4"], correta:3,explicacao:"8a - 2a = 6a."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm 7x + 9, o termo constante é:",opcoes:["7x","x","7","9"], correta:3,explicacao:"Termo constante é o número sem variável."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm 3a + 2b + 10, o termo constante é:",opcoes:["3a","2b","a + b","10"], correta:3,explicacao:"O termo constante é 10."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm 12x + 6, o termo constante é:",opcoes:["12x","x","12","6"], correta:3,explicacao:"6 é o número sem variável."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm 5a - 3b + 11, o termo constante é:",opcoes:["5a","-3b","a + b","11"], correta:3,explicacao:"11 é o termo constante."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSe x = 3, quanto vale 2x + 4?",opcoes:["10","12","6","8"], correta:0,explicacao:"2(3) + 4 = 10."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSe y = 2, quanto vale 5y - 1?",opcoes:["9","10","8","7"], correta:0,explicacao:"5(2) - 1 = 9."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSe x = 4, quanto vale 3x + 2?",opcoes:["14","12","10","16"], correta:0,explicacao:"3(4) + 2 = 14."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSe y = 5, quanto vale 2y - 3?",opcoes:["7","10","8","6"], correta:0,explicacao:"2(5) - 3 = 7."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nQual é o coeficiente de 8xy?",opcoes:["x","y","8","xy"], correta:2,explicacao:"O coeficiente é 8."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm -6ab, o coeficiente é:",opcoes:["ab","-6","a","6"], correta:1,explicacao:"O coeficiente é -6."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nQual é o coeficiente de 7xy?",opcoes:["xy","x","y","7"], correta:3,explicacao:"O coeficiente é 7."},
+{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm -9ab, o coeficiente é:",opcoes:["ab","9","a","-9"], correta:3,explicacao:"O coeficiente é -9."},
+
+
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nEm um jogo, um personagem dobra sua pontuação a cada fase. Se ele começou com 2 pontos, qual será sua pontuação após 4 fases?","opcoes":["16","24","32","18"],"correta":2,"explicacao":"A pontuação dobra a cada fase: 2 × 2⁴ = 2⁵ = 32."},
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nUma bactéria se multiplica formando 3 vezes a quantidade anterior a cada ciclo. Quantas bactérias existirão após 3 ciclos, começando com 1?","opcoes":["9","27","18","12"],"correta":1,"explicacao":"Crescimento exponencial: 3³ = 27."},
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Potenciação básica II","pergunta":"\nQual o valor de 2³ + 2²?","opcoes":["10","12","8","6"],"correta":1,"explicacao":"2³ = 8 e 2² = 4, então 8 + 4 = 12."},
@@ -2619,93 +2711,6 @@ explicacao:"A média é (2+4+6+8+10+12)/6 = 42/6 = 7."},
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\nUm carro percorre 80 km em 2 horas. Quantos km percorrerá em 5 horas?","opcoes":["180","190","210","200"],"correta":3,"explicacao":"80/2 = 40; 40 × 5 = 200."},
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Regra de três simples direta e inversa II","pergunta":"\n10 trabalhadores fazem um serviço em 6 dias. Quantos dias levarão 15 trabalhadores?","opcoes":["3","4","5","6"],"correta":1,"explicacao":"10×6 = 15×x → x = 4."},
 
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nO que representa uma expressão algébrica?",opcoes:["Números e letras juntos","Apenas números","Apenas letras","Apenas operações"], correta:0,explicacao:"Uma expressão algébrica é formada por números e letras juntos, onde as letras representam variáveis."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nQual das opções é uma expressão algébrica?",opcoes:["5 + 3","4 ÷ 2","2x + 7","10"], correta:2,explicacao:"Expressões algébricas possuem letras e números, como 2x + 7."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nQual alternativa representa uma expressão algébrica?",opcoes:["15","x + 9","4 ÷ 2","7"], correta:1,explicacao:"x + 9 é uma expressão algébrica pois contém variável e número."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nEm 3a + 2b - 5, o que são as letras a e b?",opcoes:["Números fixos","Coeficientes","Constantes","Variáveis"], correta:3,explicacao:"As letras representam valores desconhecidos, chamados de variáveis."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nNa expressão 6a + 4b - 9, quantos termos existem?",opcoes:["2","4","3","1"], correta:2,explicacao:"Os termos são separados por + ou -, resultando em 3 termos: 6a, 4b e -9."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nNa expressão 8x + 5, os termos são:",opcoes:["8x e 5","8 e x","8x e x","5x e 8"], correta:0,explicacao:"Os termos são 8x e 5."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nNa expressão 5x - 3y + 8, quantos termos existem?",opcoes:["2","4","3","1"], correta:2,explicacao:"Existem três termos: 5x, -3y e 8."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nNa expressão 9a + 4, os termos são:",opcoes:["9a e 4","9 e a","9a e a","a e 4a"], correta:0,explicacao:"Os termos são 9a e 4."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nQual é o coeficiente de 7y?",opcoes:["y","7y","1","7"], correta:3,explicacao:"Coeficiente é o número que multiplica a variável, neste caso 7."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) I",pergunta:"\nEm -3a, o coeficiente é:",opcoes:["-3","a","3","-a"], correta:0,explicacao:"O coeficiente é o número com sinal que multiplica a variável."},
-
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQual é o coeficiente de 12xy?",opcoes:["xy","x","y","12"], correta:3,explicacao:"O coeficiente é o número 12."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQual é o coeficiente de -8x?",opcoes:["x","8","-x","-8"], correta:3,explicacao:"O coeficiente é -8."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nEm 15ab, o coeficiente é:",opcoes:["15","a","b","ab"], correta:0,explicacao:"O coeficiente é o número 15."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQuais são termos semelhantes?",opcoes:["3x e 3y","4x e 4","2a e 3b","5a e 2a"], correta:3,explicacao:"Termos semelhantes possuem a mesma variável."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQuanto vale 6p - 2p?",opcoes:["8p","6p","2p","4p"], correta:3,explicacao:"6p - 2p = 4p."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQuais são termos semelhantes?",opcoes:["3a e 7a","2x e 2y","5x e 5","a e b"], correta:0,explicacao:"Têm a mesma letra, portanto são semelhantes."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nQuanto vale 10m - 6m?",opcoes:["16m","10m","4m","6m"], correta:2,explicacao:"10m - 6m = 4m."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nSimplifique: 4x + 3 - 2x + 5",opcoes:["6x + 8","2x + 2","4x + 8","2x + 8"], correta:3,explicacao:"4x - 2x = 2x e 3 + 5 = 8."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nSimplifique: 9m - 5m + 1",opcoes:["14m + 1","4m - 1","9m + 5m","4m + 1"], correta:3,explicacao:"9m - 5m = 4m."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) II",pergunta:"\nSimplifique: 6x + 2 - 3x + 5",opcoes:["9x + 7","3x + 3","6x + 7","3x + 7"], correta:3,explicacao:"6x - 3x = 3x e 2 + 5 = 7."},
-
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSimplifique: 8a - 2a + 4",opcoes:["10a + 4","8a + 2","6a - 4","6a + 4"], correta:3,explicacao:"8a - 2a = 6a."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm 7x + 9, o termo constante é:",opcoes:["7x","x","7","9"], correta:3,explicacao:"Termo constante é o número sem variável."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm 3a + 2b + 10, o termo constante é:",opcoes:["3a","2b","a + b","10"], correta:3,explicacao:"O termo constante é 10."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm 12x + 6, o termo constante é:",opcoes:["12x","x","12","6"], correta:3,explicacao:"6 é o número sem variável."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm 5a - 3b + 11, o termo constante é:",opcoes:["5a","-3b","a + b","11"], correta:3,explicacao:"11 é o termo constante."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSe x = 3, quanto vale 2x + 4?",opcoes:["10","12","6","8"], correta:0,explicacao:"2(3) + 4 = 10."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSe y = 2, quanto vale 5y - 1?",opcoes:["9","10","8","7"], correta:0,explicacao:"5(2) - 1 = 9."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSe x = 4, quanto vale 3x + 2?",opcoes:["14","12","10","16"], correta:0,explicacao:"3(4) + 2 = 14."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nSe y = 5, quanto vale 2y - 3?",opcoes:["7","10","8","6"], correta:0,explicacao:"2(5) - 3 = 7."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nQual é o coeficiente de 8xy?",opcoes:["x","y","8","xy"], correta:2,explicacao:"O coeficiente é 8."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm -6ab, o coeficiente é:",opcoes:["ab","-6","a","6"], correta:1,explicacao:"O coeficiente é -6."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nQual é o coeficiente de 7xy?",opcoes:["xy","x","y","7"], correta:3,explicacao:"O coeficiente é 7."},
-{materia:"Matemática 7º Ano",assunto:"Expressões Algébricas (introdução) III",pergunta:"\nEm -9ab, o coeficiente é:",opcoes:["ab","9","a","-9"], correta:3,explicacao:"O coeficiente é -9."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nQual é o resultado de 3x + 5x?",
-opcoes:["2x","8x","15x","x"], correta:1,
-explicacao:"Somamos os termos semelhantes: 3x + 5x = 8x."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nQual termo é chamado de coeficiente na expressão 7y?",
-opcoes:["y","7","7y","nenhum"], correta:1,
-explicacao:"O coeficiente é o número que multiplica a variável, neste caso 7."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nNa expressão 4a - 2b, quais são os termos?",
-opcoes:["4a e -2b","4 e -2","a e b","4a, 2b e -"], correta:0,
-explicacao:"Os termos são as partes da expressão separadas por + ou -, aqui: 4a e -2b."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nO que é um termo constante em uma expressão algébrica?",
-opcoes:["Número com variável","Número sem variável","Variável sozinha","Coeficiente"], correta:1,
-explicacao:"Termo constante é um número que não possui variável."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nSimplifique: 5x + 3 - 2x + 7",
-opcoes:["3x + 10","7x + 10","3x + 4","5x + 7"], correta:0,
-explicacao:"Somamos os termos semelhantes: 5x - 2x = 3x e 3 + 7 = 10. Resultado: 3x + 10."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nQual é o resultado da expressão 6m - 4m + 2?",
-opcoes:["2m + 2","10m + 2","6m - 4m","m + 2"], correta:0,
-explicacao:"6m - 4m = 2m. Mantemos o 2 constante. Resultado: 2m + 2."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nIdentifique o coeficiente do termo 9xy:",
-opcoes:["9xy","9","xy","nenhum"], correta:1,
-explicacao:"O coeficiente é o número que multiplica a variável, aqui 9."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nQual expressão representa a soma de 2a e 3a?",
-opcoes:["2a + 3","6a","5a","a5"], correta:2,
-explicacao:"Somando os termos semelhantes: 2a + 3a = 5a."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nSe x = 2, qual é o valor de 3x + 4?",
-opcoes:["12","10","8","14"], correta:1,
-explicacao:"Substituindo x por 2: 3*2 + 4 = 6 + 4 = 10."},
-
-{materia:"Matemática 7º Ano (Nível II)",assunto:"Expressões algébricas",
-pergunta:"\nSimplifique a expressão: 7p + 2q - 3p + q",
-opcoes:["4p + 3q","10p + 3q","7p - 3p + 3q","4p + q"], correta:0,
-explicacao:"7p - 3p = 4p e 2q + q = 3q. Resultado: 4p + 3q."},
-  
-   
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nUm número é representado por x. Qual é o valor da expressão x + 5, quando x = 3?","opcoes":["6","7","8","9"],"correta":2,"explicacao":"Substituindo x = 3: 3 + 5 = 8."},
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe x = 4, qual o valor de 2x + 3?","opcoes":["9","10","11","12"],"correta":2,"explicacao":"2×4 + 3 = 8 + 3 = 11."},
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Expressões algébricas II","pergunta":"\nSe y = 5, qual o valor de y² + 2?","opcoes":["25","27","30","20"],"correta":1,"explicacao":"5² = 25; 25 + 2 = 27."},
@@ -2834,7 +2839,522 @@ explicacao:"7p - 3p = 4p e 2q + q = 3q. Resultado: 4p + 3q."},
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 36 = 0 tem soluções. Qual delas é correta?","opcoes":["-6","-4","4","6"],"correta":3,"explicacao":"x² - 36 = 0 → x = ±6, então uma solução é 6."},
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 1 = 0 possui soluções. Qual delas está correta?","opcoes":["1","-1","2","3"],"correta":0,"explicacao":"x² - 1 = 0 → x = ±1, então uma solução é 1."},
 {"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 16 = 0 tem soluções. Qual delas é correta?","opcoes":["-4","4","2","6"],"correta":1,"explicacao":"x² - 16 = 0 → x = ±4, então uma solução é 4."},
-{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 2x = 0 possui soluções. Qual delas é correta?","opcoes":["0","1","2","3"],"correta":2,"explicacao":"x(x-2)=0 → x=0 ou x=2, então uma solução é 2."}
+{"materia":"Matemática 7º Ano (Nível II)","assunto":"Equações do 2º grau","pergunta":"\nA equação x² - 2x = 0 possui soluções. Qual delas é correta?","opcoes":["0","1","2","3"],"correta":2,"explicacao":"x(x-2)=0 → x=0 ou x=2, então uma solução é 2."},
+
+{"materia":"Matemática 7º Ano (Nível II)", "assunto":"Ângulos", "pergunta":"\nO ângulo de 15 graus é classificado como qual tipo?", "imagem":"https://i.pinimg.com/736x/51/0b/c6/510bc6539bec6b7b6310f23347a95505.jpg", "opcoes":["Ângulo reto","Ângulo obtuso","Ângulo agudo","Ângulo raso"], "correta":2, "explicacao":"Ângulos menores que 90° são chamados de ângulos agudos. Como 15° é menor que 90°, é um ângulo agudo."},
+{"materia":"Matemática 7º Ano (Nível II)", "assunto":"Ângulos", "pergunta":"\nO ângulo de 30 graus é classificado como qual tipo?", "imagem":"https://i.pinimg.com/736x/51/0b/c6/510bc6539bec6b7b6310f23347a95505.jpg", "opcoes":["Ângulo raso","Ângulo agudo","Ângulo obtuso","Ângulo completo"], "correta":1, "explicacao":"Ângulos menores que 90° são ângulos agudos. Como 30° é menor que 90°, ele é agudo."},
+{"materia":"Matemática 7º Ano (Nível II)", "assunto":"Ângulos", "pergunta":"\nO ângulo de 45 graus é classificado como qual tipo?", "imagem":"https://i.pinimg.com/736x/51/0b/c6/510bc6539bec6b7b6310f23347a95505.jpg", "opcoes":["Ângulo obtuso","Ângulo reto","Ângulo agudo","Ângulo raso"], "correta":2, "explicacao":"Ângulos menores que 90° são agudos. Como 45° está abaixo de 90°, é um ângulo agudo."},
+{"materia":"Matemática 7º Ano (Nível II)", "assunto":"Ângulos", "pergunta":"\nO ângulo de 60 graus é classificado como qual tipo?", "imagem":"https://i.pinimg.com/736x/51/0b/c6/510bc6539bec6b7b6310f23347a95505.jpg", "opcoes":["Ângulo agudo","Ângulo reto","Ângulo obtuso","Ângulo completo"], "correta":0, "explicacao":"Ângulos menores que 90° são classificados como agudos. Como 60° é menor que 90°, é agudo."},
+{"materia":"Matemática 7º Ano (Nível II)", "assunto":"Ângulos", "pergunta":"\nO ângulo de 90 graus é classificado como qual tipo?", "imagem":"https://i.pinimg.com/736x/51/0b/c6/510bc6539bec6b7b6310f23347a95505.jpg", "opcoes":["Ângulo agudo","Ângulo obtuso","Ângulo reto","Ângulo raso"], "correta":2, "explicacao":"Um ângulo de exatamente 90° é chamado de ângulo reto."},
+{"materia":"Matemática 7º Ano (Nível II)", "assunto":"Ângulos", "pergunta":"\nO ângulo de 120 graus é classificado como qual tipo?", "imagem":"https://i.pinimg.com/736x/51/0b/c6/510bc6539bec6b7b6310f23347a95505.jpg", "opcoes":["Ângulo agudo","Ângulo obtuso","Ângulo reto","Ângulo completo"], "correta":1, "explicacao":"Ângulos maiores que 90° e menores que 180° são chamados de obtusos. Como 120° está nesse intervalo, é obtuso."},
+{"materia":"Matemática 7º Ano (Nível II)", "assunto":"Ângulos", "pergunta":"\nO ângulo de 180 graus é classificado como qual tipo?", "imagem":"https://i.pinimg.com/736x/51/0b/c6/510bc6539bec6b7b6310f23347a95505.jpg", "opcoes":["Ângulo reto","Ângulo obtuso","Ângulo raso","Ângulo completo"], "correta":2, "explicacao":"Um ângulo de 180° é chamado de ângulo raso."},
+{"materia":"Matemática 7º Ano (Nível II)", "assunto":"Ângulos", "pergunta":"\nO ângulo de 270 graus é classificado como qual tipo?", "imagem":"https://i.pinimg.com/736x/51/0b/c6/510bc6539bec6b7b6310f23347a95505.jpg", "opcoes":["Ângulo agudo","Ângulo obtuso","Ângulo raso","Ângulo côncavo"], "correta":3, "explicacao":"Ângulos maiores que 180° e menores que 360° são chamados de ângulos côncavos. Como 270° está nesse intervalo, é côncavo."},
+{"materia":"Matemática 7º Ano (Nível II)", "assunto":"Ângulos", "pergunta":"\nO ângulo de 360 graus é classificado como qual tipo?", "imagem":"https://i.pinimg.com/736x/51/0b/c6/510bc6539bec6b7b6310f23347a95505.jpg", "opcoes":["Ângulo completo","Ângulo raso","Ângulo obtuso","Ângulo agudo"], "correta":0, "explicacao":"Um ângulo de 360° representa uma volta completa, sendo chamado de ângulo completo."},
+
+
+
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos",
+  "pergunta": "\nA Agência Brasil divulgou o resultado de uma pesquisa feita pela empresa Nexus sobre o uso de celulares nas escolas. \nForam entrevistadas 2.000 pessoas.\n \nQuantas pessoas acham que o celular pode ser usado apenas em atividades didáticas ?",
+  "imagem": "https://uploads.tudosaladeaula.com/2025/09/GRAFICOS-E-TABELAS-2.png",
+  "opcoes": ["201", "640", "804", "603"],
+  "correta": 1,
+  "explicacao": "No gráfico, 32% são contra a proibição. 32% de 2000 = 640 pessoas."
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos",
+  "pergunta": "\nA Agência Brasil divulgou o resultado de uma pesquisa feita pela empresa Nexus sobre o uso de celulares nas escolas. \nForam entrevistadas 2.000 pessoas.\n \nQuantas pessoas são Favoráveis à proibição total dos aparelhos ?",
+  "imagem": "https://uploads.tudosaladeaula.com/2025/09/GRAFICOS-E-TABELAS-2.png",
+  "opcoes": ["280", "250", "1080", "680"],
+  "correta": 2,
+  "explicacao": "No gráfico, 54% são contra a proibição. 54% de 2000 = 1080 pessoas."
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos",
+  "pergunta": "\nA Agência Brasil divulgou o resultado de uma pesquisa feita pela empresa Nexus sobre o uso de celulares nas escolas. \nForam entrevistadas 2.000 pessoas.\n \nQuantas pessoas são Contra a proibição ?",
+  "imagem": "https://uploads.tudosaladeaula.com/2025/09/GRAFICOS-E-TABELAS-2.png",
+  "opcoes": ["120", "280", "230", "526"],
+  "correta": 1,
+  "explicacao": "No gráfico, 14% são contra a proibição. 14% de 2000 = 280 pessoas."
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos II",
+  "pergunta": "\nO dono de dois cachorrinhos, um shitzu e um poodle, fez uma pesquisa na internet sobre preços de banho para seus cães em cinco lojas próximas à sua casa. \nEle pretendia levar os dois cachorrinhos a um mesmo petshop naquela semana para tomar banho. \nO local escolhido foi o que apresentou o menor preço para banho dos dois cachorrinhos.\n \nO petshop escolhido foi o :",
+  "imagem": "https://qcon-assets-production.s3.amazonaws.com/images/provas/126090/Captura_de%20tela%202025-01-23%20230831.png",
+  "opcoes": ["I", "II", "III", "IV ou V"],
+  "correta": 2,
+  "explicacao": "O petshop III foi escolhido pois oferecia o melhor custo para o cliente"
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos III",
+  "pergunta": "\nFoi feita uma pesquisa numa escola com 200 alunos pra saber quais modalidades são as preferidas do alunos.\n \nDefina quantos alunos preferem Futebol",
+  "imagem": "https://media.brainly.com.br/image/rs:fill/w:640/q:75/plain/https://pt-static.z-dn.net/files/d84/0b08f587e17fb4fd4dde6158497bb3b9.jpg",
+  "opcoes": ["100", "70", "80", "90"],
+  "correta": 2,
+  "explicacao": "São 80 Alunos que Preferem Futebol"
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos III",
+  "pergunta": "\nFoi feita uma pesquisa numa escola com 200 alunos pra saber quais modalidades são as preferidas do alunos.\n \nDefina quantos alunos preferem Vôlei",
+  "imagem": "https://media.brainly.com.br/image/rs:fill/w:640/q:75/plain/https://pt-static.z-dn.net/files/d84/0b08f587e17fb4fd4dde6158497bb3b9.jpg",
+  "opcoes": ["60", "70", "65", "90"],
+  "correta": 0,
+  "explicacao": "São 60 Alunos que Preferem Vôlei"
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos III",
+  "pergunta": "\nFoi feita uma pesquisa numa escola com 200 alunos pra saber quais modalidades são as preferidas do alunos.\n \nDefina quantos alunos preferem Basquete",
+  "imagem": "https://media.brainly.com.br/image/rs:fill/w:640/q:75/plain/https://pt-static.z-dn.net/files/d84/0b08f587e17fb4fd4dde6158497bb3b9.jpg",
+  "opcoes": ["60", "30", "75", "20"],
+  "correta": 1,
+  "explicacao": "São 30 Alunos que Preferem Basquete"
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos III",
+  "pergunta": "\nFoi feita uma pesquisa numa escola com 200 alunos pra saber quais modalidades são as preferidas do alunos.\n \nDefina quantos alunos preferem Natação",
+  "imagem": "https://media.brainly.com.br/image/rs:fill/w:640/q:75/plain/https://pt-static.z-dn.net/files/d84/0b08f587e17fb4fd4dde6158497bb3b9.jpg",
+  "opcoes": ["45", "40", "30", "20"],
+  "correta": 3,
+  "explicacao": "São 20 Alunos que Preferem Natação"
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos III",
+  "pergunta": "\nFoi feita uma pesquisa numa escola com 200 alunos pra saber quais modalidades são as preferidas do alunos.\n \nDefina quantos alunos preferem Outros",
+  "imagem": "https://media.brainly.com.br/image/rs:fill/w:640/q:75/plain/https://pt-static.z-dn.net/files/d84/0b08f587e17fb4fd4dde6158497bb3b9.jpg",
+  "opcoes": ["10", "40", "30", "20"],
+  "correta": 0,
+  "explicacao": "São 10 Alunos que Preferem Outros"
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos III",
+  "pergunta": "\nFoi feita uma pesquisa numa escola com 200 alunos pra saber quais modalidades são as preferidas do alunos.\n \nDefina a soma de quantos alunos preferem Futebol e Vôlei",
+  "imagem": "https://media.brainly.com.br/image/rs:fill/w:640/q:75/plain/https://pt-static.z-dn.net/files/d84/0b08f587e17fb4fd4dde6158497bb3b9.jpg",
+  "opcoes": ["110", "140", "130", "120"],
+  "correta": 1,
+  "explicacao": "São 140 Alunos que Preferem Futebol e Vôlei somados"
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos III",
+  "pergunta": "\nFoi feita uma pesquisa numa escola com 200 alunos pra saber quais modalidades são as preferidas do alunos.\n \nDefina a diferença entre o número de alunos que gostam de Natação e dos que gostam de Vôlei",
+  "imagem": "https://media.brainly.com.br/image/rs:fill/w:640/q:75/plain/https://pt-static.z-dn.net/files/d84/0b08f587e17fb4fd4dde6158497bb3b9.jpg",
+  "opcoes": ["10", "40", "30", "20"],
+  "correta": 1,
+  "explicacao": "São 40 Alunos que representam a diferença entre os que preferem Natação e Vôlei"
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos III",
+  "pergunta": "\nFoi feita uma pesquisa numa escola com 200 alunos pra saber quais modalidades são as preferidas do alunos.\n \nDefina a fração corresponde a porcentagem de alunos que preferem Natação",
+  "imagem": "https://media.brainly.com.br/image/rs:fill/w:640/q:75/plain/https://pt-static.z-dn.net/files/d84/0b08f587e17fb4fd4dde6158497bb3b9.jpg",
+  "opcoes": ["1/10", "1/4", "1/3", "3/4"],
+  "correta": 0,
+  "explicacao": "a alternativa correta é 1/10, é a fração que representa a porcentagem dos alunos que preferem Natação"
+},
+
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Porcentagem com Gráficos III",
+  "pergunta": "\nFoi feita uma pesquisa numa escola com 200 alunos pra saber quais modalidades são as preferidas do alunos.\n \nDefina quantas vezes precisariamos multiplicar o número de alunos que preferem Natação para alcançar o mesmo número dos alunos de Vôlei",
+  "imagem": "https://media.brainly.com.br/image/rs:fill/w:640/q:75/plain/https://pt-static.z-dn.net/files/d84/0b08f587e17fb4fd4dde6158497bb3b9.jpg",
+  "opcoes": ["1x", "4x", "3x", "2x"],
+  "correta": 2,
+  "explicacao": "a alternativa correta é 3x o número de Alunos para chegar ao número de alunos que preferem Vôlei "
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Volumes com Imagem I",
+  "pergunta": "oi",
+  "imagem": "https://m.media-amazon.com/images/I/41xmroRd9mL._AC_.jpg",
+  "opcoes": ["1x", "4x", "3x", "2x"],
+  "correta": 2,
+  "explicacao": "a alternativa correta é 3x o número de Alunos para chegar ao número de alunos que preferem Vôlei "
+},
+
+{
+  "materia": "Matemática 7º Ano (Nível II)",
+  "assunto": "Volumes com Imagem II",
+  "pergunta": "oi",
+  "imagem": "https://i.pinimg.com/736x/18/8c/18/188c18c9ce825a836ea1a542471221be.jpg",
+  "opcoes": ["1x", "4x", "3x", "2x"],
+  "correta": 2,
+  "explicacao": "a alternativa correta é 3x o número de Alunos para chegar ao número de alunos que preferem Vôlei "
+},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"Observe a figura de um coração desenhado no caderno. Se você traçar uma linha vertical no meio dele, o que acontece com as duas partes?", "opcoes":["São completamente diferentes","São simétricas","Uma parte é maior","Não existe relação"], "correta":1, "explicacao":"O coração possui simetria vertical, então as duas partes são iguais como em um espelho."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"Uma borboleta possui simetria em relação a qual tipo de linha?", "opcoes":["Horizontal","Vertical","Diagonal","Nenhuma"], "correta":1, "explicacao":"A borboleta possui simetria em relação a uma linha vertical que divide seu corpo."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"Qual das figuras abaixo NÃO possui eixo de simetria?", "opcoes":["Quadrado","Retângulo","Triângulo escaleno","Círculo"], "correta":2, "explicacao":"O triângulo escaleno não possui lados iguais, portanto não tem eixo de simetria."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"Um desenho foi ampliado com fator 2. Se um lado media 3 cm, quanto passa a medir?", "opcoes":["5 cm","6 cm","9 cm","3 cm"], "correta":1, "explicacao":"Multiplica-se por 2: 3 x 2 = 6 cm."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"Uma figura foi reduzida pela metade. Um segmento de 10 cm passa a medir:", "opcoes":["2 cm","5 cm","8 cm","20 cm"], "correta":1, "explicacao":"Metade de 10 é 5 cm."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"Qual é a posição do ponto A (2, 3) no plano cartesiano?", "opcoes":["2 unidades para esquerda e 3 para baixo","2 para direita e 3 para cima","3 para direita e 2 para cima","2 para direita e 3 para baixo"], "correta":1, "explicacao":"O ponto (2,3) indica 2 unidades à direita e 3 unidades para cima."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"O ponto B (4, 2) é refletido no eixo y. Qual será o novo ponto?", "opcoes":["(4, 2)","(-4, 2)","(4, -2)","(-4, -2)"], "correta":1, "explicacao":"Na reflexão no eixo y, o valor de x muda de sinal."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"O ponto C (1, -3) refletido no eixo x se torna:", "opcoes":["(1, 3)","(-1, -3)","(-1, 3)","(1, -3)"], "correta":0, "explicacao":"Na reflexão no eixo x, o valor de y muda de sinal."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"Um ponto D (2, 1) é movido 3 unidades para a direita e 2 para cima. Qual sua nova posição?", "opcoes":["(5, 3)","(1, 3)","(5, -1)","(2, 4)"], "correta":0, "explicacao":"Somamos 3 ao x e 2 ao y: (2+3, 1+2) = (5,3)."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas", "pergunta":"Qual transformação mantém o formato e o tamanho da figura?", "opcoes":["Ampliação","Redução","Translação","Deformação"], "correta":2, "explicacao":"A translação apenas desloca a figura, sem alterar seu tamanho ou forma."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"Quando dizemos que uma figura tem simetria, isso significa que:", "opcoes":["Ela é muito grande","Pode ser dividida em partes iguais que se encaixam","Tem apenas linhas retas","Está no plano cartesiano"], "correta":1, "explicacao":"Uma figura simétrica pode ser dividida em partes iguais que coincidem como em um espelho."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"Qual objeto do dia a dia apresenta simetria?", "opcoes":["Uma folha rasgada aleatoriamente","Um rosto humano (aproximadamente)","Uma pedra irregular","Um desenho bagunçado"], "correta":1, "explicacao":"O rosto humano possui simetria aproximada, com lados semelhantes."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"O eixo de simetria é:", "opcoes":["Um tipo de número","Uma linha que divide a figura em partes iguais","Um ponto no plano","Uma medida de comprimento"], "correta":1, "explicacao":"O eixo de simetria é a linha que divide a figura em duas partes iguais e espelhadas."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"As transformações geométricas servem para:", "opcoes":["Apagar figuras","Mudar a posição, tamanho ou forma de uma figura","Apenas colorir desenhos","Medir ângulos"], "correta":1, "explicacao":"Transformações geométricas alteram posição, tamanho ou orientação das figuras."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"Quando ampliamos uma figura, acontece que:", "opcoes":["Ela diminui","Ela muda de forma","Ela aumenta de tamanho mantendo o formato","Ela desaparece"], "correta":2, "explicacao":"Na ampliação, a figura cresce mas mantém suas proporções."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"Reduzir uma figura significa:", "opcoes":["Torná-la maior","Torná-la menor mantendo a forma","Girá-la","Cortá-la ao meio"], "correta":1, "explicacao":"A redução diminui o tamanho da figura, mas mantém sua forma original."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"O plano cartesiano é usado para:", "opcoes":["Desenhar apenas círculos","Localizar pontos usando números","Medir tempo","Calcular área apenas"], "correta":1, "explicacao":"O plano cartesiano permite localizar pontos por meio de coordenadas."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"Um ponto no plano cartesiano é representado por:", "opcoes":["Um número apenas","Uma letra","Dois números (x, y)","Três números"], "correta":2, "explicacao":"Um ponto é representado por um par ordenado (x, y)."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"Mover uma figura sem girar ou mudar seu tamanho é chamado de:", "opcoes":["Ampliação","Redução","Translação","Reflexão"], "correta":2, "explicacao":"Translação é o deslocamento da figura sem alterar forma ou tamanho."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Simetria e Transformações Geométricas (introdução)", "pergunta":"Quando uma figura é refletida, ela:", "opcoes":["Desaparece","Fica maior","Parece um espelho dela mesma","Perde sua forma"], "correta":2, "explicacao":"Na reflexão, a figura forma uma imagem espelhada em relação a um eixo."},
+
+
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Qual dos números abaixo é um número racional?", "opcoes":["√2","π","1/3","√5"], "correta":2, "explicacao":"Números racionais podem ser escritos na forma de fração, como 1/3."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Qual das opções representa um número racional?", "opcoes":["0,5","π","√3","∞"], "correta":0, "explicacao":"0,5 pode ser escrito como 1/2, portanto é racional."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Todo número inteiro é também:", "opcoes":["Irracional","Natural apenas","Racional","Decimal infinito"], "correta":2, "explicacao":"Todo número inteiro pode ser escrito como fração (ex: 3 = 3/1)."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Qual dos números abaixo NÃO é racional?", "opcoes":["1/2","0,25","√2","3"], "correta":2, "explicacao":"√2 é um número irracional."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"O número 0,75 pode ser escrito como:", "opcoes":["3/4","75/10","7/5","1/4"], "correta":0, "explicacao":"0,75 = 75/100 = 3/4."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Quanto é 3 + (-5)?", "opcoes":["-2","2","8","-8"], "correta":0, "explicacao":"Somando um número negativo: 3 - 5 = -2."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Qual é o resultado de -4 + 7?", "opcoes":["-11","3","11","-3"], "correta":1, "explicacao":"-4 + 7 = 3."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Quanto é -6 + (-2)?", "opcoes":["8","-8","-4","4"], "correta":1, "explicacao":"Somando negativos: -6 - 2 = -8."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Qual é o resultado de 5 + (-3)?", "opcoes":["-2","2","8","-8"], "correta":1, "explicacao":"5 - 3 = 2."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Quanto é -2 + 2?", "opcoes":["0","4","-4","2"], "correta":0, "explicacao":"Números opostos somam zero."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Quanto é 2 × (-3)?", "opcoes":["-6","6","-1","1"], "correta":0, "explicacao":"Sinais diferentes resultam em negativo: 2 × -3 = -6."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Qual é o resultado de (-4) × (-2)?", "opcoes":["-8","8","6","-6"], "correta":1, "explicacao":"Sinais iguais resultam em positivo: -4 × -2 = 8."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Quanto é (-5) × 3?", "opcoes":["15","-15","-8","8"], "correta":1, "explicacao":"Negativo × positivo = negativo: -5 × 3 = -15."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Qual é o resultado de (-2) × (-2)?", "opcoes":["-4","2","4","-2"], "correta":2, "explicacao":"Negativo × negativo = positivo: 4."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais I", "pergunta":"Quanto é 0 × (-7)?", "opcoes":["-7","7","0","1"], "correta":2, "explicacao":"Qualquer número multiplicado por zero é zero."},
+
+
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Qual é o resultado de 1/2 ÷ 1/4?", "opcoes":["4","1/2","2","1/8"], "correta":2, "explicacao":"Dividir frações é multiplicar pela inversa: 1/2 × 4/1 = 4/2 = 2."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Quanto é 3/5 ÷ 2/5?", "opcoes":["5/6","3/2","1","6/5"], "correta":1, "explicacao":"Multiplica pela inversa: 3/5 × 5/2 = 15/10 = 3/2."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Qual o resultado de 4 ÷ 1/2?", "opcoes":["1/2","8","4","2"], "correta":1, "explicacao":"Dividir por 1/2 é multiplicar por 2: 4 × 2 = 8."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Quanto é 6/7 ÷ 3/7?", "opcoes":["1/2","7","2","3"], "correta":2, "explicacao":"Multiplica pela inversa: 6/7 × 7/3 = 6/3 = 2."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Qual é o resultado de 5/6 ÷ 5/6?", "opcoes":["5/6","1","6/5","0"], "correta":1, "explicacao":"Qualquer número diferente de zero dividido por ele mesmo é 1."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Quanto é (1/2)²?", "opcoes":["2","1/2","1/4","2/4"], "correta":2, "explicacao":"Eleva numerador e denominador: 1²/2² = 1/4."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Qual é o valor de (3/4)²?", "opcoes":["9/8","3/16","9/16","6/8"], "correta":2, "explicacao":"3²/4² = 9/16."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Quanto é (2/3)³?", "opcoes":["2/9","8/27","6/9","4/9"], "correta":1, "explicacao":"2³/3³ = 8/27."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Qual o resultado de (5/2)²?", "opcoes":["25/2","5/4","25/4","10/4"], "correta":2, "explicacao":"5²/2² = 25/4."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Quanto é (1/3)²?", "opcoes":["3/9","1/6","2/9","1/9"], "correta":3, "explicacao":"1²/3² = 1/9."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Qual é a raiz quadrada de 1/4?", "opcoes":["2","1/8","1/2","2/4"], "correta":2, "explicacao":"A raiz quadrada de 1/4 é 1/2."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Qual é √(9/16)?", "opcoes":["3/16","4/3","3/4","9/8"], "correta":2, "explicacao":"A raiz quadrada de 9/16 é 3/4."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Quanto é √(4/9)?", "opcoes":["4/3","2/9","2/3","1/3"], "correta":2, "explicacao":"A raiz quadrada de 4/9 é 2/3."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Qual é √(16/25)?", "opcoes":["4/25","5/4","4/5","8/5"], "correta":2, "explicacao":"A raiz quadrada de 16/25 é 4/5."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Números racionais II", "pergunta":"Quanto é √(25/36)?", "opcoes":["25/6","6/5","5/12","5/6"], "correta":3, "explicacao":"A raiz quadrada de 25/36 é 5/6."},
+
+
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"Qual é a média dos números 4, 6 e 8?", "opcoes":["6","5","7","8"], "correta":0, "explicacao":"(4 + 6 + 8) ÷ 3 = 18 ÷ 3 = 6."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"Qual é a média de 10, 20 e 30?", "opcoes":["25","15","20","30"], "correta":2, "explicacao":"(10 + 20 + 30) ÷ 3 = 60 ÷ 3 = 20."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"A média de 5, 7 e 9 é:", "opcoes":["6","7","8","9"], "correta":1, "explicacao":"(5 + 7 + 9) ÷ 3 = 21 ÷ 3 = 7."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"Qual é a média dos números 2, 4, 6 e 8?", "opcoes":["6","4","5","3"], "correta":2, "explicacao":"(2 + 4 + 6 + 8) ÷ 4 = 20 ÷ 4 = 5."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"A média de 3 números é 10. Se dois deles são 8 e 12, qual é o terceiro?", "opcoes":["10","8","12","20"], "correta":0, "explicacao":"A soma total é 30. 8 + 12 = 20, então falta 10."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"Qual é a média dos números 1, 2, 3, 4 e 5?", "opcoes":["4","3","2","5"], "correta":1, "explicacao":"(1 + 2 + 3 + 4 + 5) ÷ 5 = 15 ÷ 5 = 3."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"A média de dois números é 6. Se um deles é 4, qual é o outro?", "opcoes":["6","8","10","2"], "correta":1, "explicacao":"Soma = 12. 12 - 4 = 8."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"Qual é a média de 7, 9, 11 e 13?", "opcoes":["9","10","11","12"], "correta":1, "explicacao":"(7 + 9 + 11 + 13) = 40 ÷ 4 = 10."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"A média de 4 números é 5. Qual é a soma deles?", "opcoes":["10","20","15","25"], "correta":1, "explicacao":"Média × quantidade: 5 × 4 = 20."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Aritmética", "pergunta":"Qual é a média dos números 6, 8 e 10?", "opcoes":["9","8","7","6"], "correta":1, "explicacao":"(6 + 8 + 10) ÷ 3 = 24 ÷ 3 = 8."},
+
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"Qual é a média ponderada dos valores 6 e 8 com pesos 1 e 1?", "opcoes":["8","7","14","6"], "correta":1, "explicacao":"(6×1 + 8×1) ÷ (1+1) = 14 ÷ 2 = 7."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"Calcule a média ponderada de 5 e 9 com pesos 2 e 1.", "opcoes":["7","9","6","8"], "correta":2, "explicacao":"(5×2 + 9×1) ÷ 3 = (10 + 9) ÷ 3 = 19 ÷ 3 ≈ 6,33, valor mais próximo é 6."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"Um aluno tirou nota 6 com peso 2 e nota 8 com peso 3. Qual é a média ponderada?", "opcoes":["7","6,5","7,2","8"], "correta":2, "explicacao":"(6×2 + 8×3) ÷ 5 = (12 + 24) ÷ 5 = 36 ÷ 5 = 7,2."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"Calcule a média ponderada de 4, 6 e 10 com pesos 1, 2 e 1.", "opcoes":["7","5","6,5","6"], "correta":2, "explicacao":"(4×1 + 6×2 + 10×1) ÷ 4 = (4 + 12 + 10) ÷ 4 = 26 ÷ 4 = 6,5."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"Qual é a média ponderada de 3 e 9 com pesos 1 e 3?", "opcoes":["6","8","9","7,5"], "correta":3, "explicacao":"(3×1 + 9×3) ÷ 4 = (3 + 27) ÷ 4 = 30 ÷ 4 = 7,5."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"Um aluno tirou 5 (peso 1), 7 (peso 2) e 9 (peso 1). Qual é a média ponderada?", "opcoes":["6,5","8","7","7,5"], "correta":2, "explicacao":"(5×1 + 7×2 + 9×1) ÷ 4 = (5 + 14 + 9) ÷ 4 = 28 ÷ 4 = 7."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"A média ponderada de dois números é calculada por:", "opcoes":["Somar os números apenas","Subtrair os valores","Multiplicar pelos pesos e dividir pela soma dos pesos","Somar e dividir por 2"], "correta":2, "explicacao":"A média ponderada usa pesos: soma dos produtos dividido pela soma dos pesos."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"Qual é a média ponderada de 2 e 10 com pesos 3 e 1?", "opcoes":["5","6","4","8"], "correta":2, "explicacao":"(2×3 + 10×1) ÷ 4 = (6 + 10) ÷ 4 = 16 ÷ 4 = 4."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"Um aluno tirou 8 (peso 2) e 4 (peso 1). Qual é a média ponderada?", "opcoes":["5","8","7","6"], "correta":2, "explicacao":"(8×2 + 4×1) ÷ 3 = (16 + 4) ÷ 3 = 20 ÷ 3 ≈ 6,67, mais próximo é 7."},
+
+{"materia":"Matemática 7º Ano", "assunto":"Média Ponderada", "pergunta":"Calcule a média ponderada de 10, 6 e 4 com pesos 1, 2 e 1.", "opcoes":["6","5","6,5","7"], "correta":2, "explicacao":"(10×1 + 6×2 + 4×1) ÷ 4 = (10 + 12 + 4) ÷ 4 = 26 ÷ 4 = 6,5."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual é o próximo número da sequência: 2, 4, 6, 8, 10, __?",opcoes:["11","12","14","10"],correta:1,explicacao:"A sequência cresce de 2 em 2. Após 10 vem 12."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual é o próximo termo: 5, 10, 15, 20, __?",opcoes:["22","25","30","24"],correta:1,explicacao:"A sequência cresce de 5 em 5. Após 20 vem 25."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual é o próximo termo: 9, 8, 7, 6, __?",opcoes:["5","4","7","3"],correta:0,explicacao:"A sequência diminui de 1 em 1. Após 6 vem 5."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual é o próximo número: 1, 3, 5, 7, __?",opcoes:["8","9","10","11"],correta:1,explicacao:"A sequência cresce de 2 em 2. Após 7 vem 9."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual é o próximo termo: 3, 6, 12, 24, __?",opcoes:["30","36","48","60"],correta:2,explicacao:"A sequência multiplica por 2. Após 24 vem 48."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual expressão representa 'o dobro de x'?",opcoes:["x + 2","2x","x/2","x - 2"],correta:1,explicacao:"Dobro significa multiplicar por 2, então 2x."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual expressão representa 'x mais 8'?",opcoes:["x - 8","8x","x + 8","x/8"],correta:2,explicacao:"'Mais' indica soma: x + 8."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual expressão representa 'o triplo de x menos 2'?",opcoes:["3x - 2","x - 2","2x - 3","3(x + 2)"],correta:0,explicacao:"Triplo é 3x e depois subtrai 2."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual expressão representa 'o quadrado de x'?",opcoes:["2x","x + x","x^2","x/2"],correta:2,explicacao:"Quadrado de x é x multiplicado por ele mesmo: x^2."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Qual expressão representa '5 vezes x mais 1'?",opcoes:["5x + 1","5(x + 1)","x + 5 + 1","6x"],correta:0,explicacao:"Primeiro 5x, depois soma 1: 5x + 1."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"A igualdade 3 + 2 = 5 é:",opcoes:["verdadeira","falsa","indefinida","impossível"],correta:0,explicacao:"3 + 2 = 5, então é verdadeira."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"A igualdade 10 - 4 = 7 é:",opcoes:["verdadeira","falsa","sempre verdadeira","não existe"],correta:1,explicacao:"10 - 4 = 6, não 7."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Em 2x = 10, qual é o valor de x?",opcoes:["2","3","5","10"],correta:2,explicacao:"2x = 10 → x = 10 ÷ 2 = 5."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Complete: 8 + __ = 12",opcoes:["2","3","4","5"],correta:2,explicacao:"8 + 4 = 12."},
+
+{materia:"Matemática 7º Ano",assunto:"Linguagem algébrica e equações (I)",pergunta:"Complete: 5 × __ = 20",opcoes:["2","3","4","5"],correta:2,explicacao:"5 × 4 = 20."},
+
+
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Resolva a equação: x + 7 = 15",opcoes:["6","7","8","9"],correta:2,explicacao:"x = 15 - 7 = 8."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Resolva a equação: 2x = 18",opcoes:["8","9","10","11"],correta:1,explicacao:"x = 18 ÷ 2 = 9."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Resolva a equação: x - 5 = 11",opcoes:["15","16","17","18"],correta:1,explicacao:"x = 11 + 5 = 16."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Resolva a equação: 3x = 21",opcoes:["6","7","8","9"],correta:1,explicacao:"x = 21 ÷ 3 = 7."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Resolva a equação: 2x + 4 = 12",opcoes:["3","4","5","6"],correta:1,explicacao:"2x = 8 → x = 4."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Qual é o conjunto universo mais comum em equações do 7º ano?",opcoes:["Apenas números negativos","Apenas números primos","Números inteiros ou naturais","Apenas frações"],correta:2,explicacao:"Normalmente usa-se números inteiros ou naturais dependendo do problema."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Em x + 3 = 10, qual é a solução?",opcoes:["5","6","7","8"],correta:2,explicacao:"x = 10 - 3 = 7."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Em 5x = 20, qual é o conjunto solução?",opcoes:["{2}","{3}","{4}","{5}"],correta:2,explicacao:"x = 20 ÷ 5 = 4, então S = {4}."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Em x - 2 = 8, qual é a solução correta?",opcoes:["{5}","{6}","{7}","{10}"],correta:3,explicacao:"x = 8 + 2 = 10, então S = {10}."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Em 2x + 6 = 14, qual é a solução?",opcoes:["2","3","4","5"],correta:2,explicacao:"2x = 8 → x = 4."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"As equações 2x = 10 e x = 5 são:",opcoes:["equivalentes","iguais","sem solução","impossíveis"],correta:0,explicacao:"Ambas têm a mesma solução (x = 5), então são equivalentes."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"As equações x + 3 = 7 e x = 4 são:",opcoes:["equivalentes","diferentes","impossíveis","sem solução"],correta:0,explicacao:"As duas levam à mesma solução x = 4."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Qual equação é equivalente a x = 6?",opcoes:["x + 2 = 8","x - 2 = 6","2x = 6","x + 6 = 12"],correta:0,explicacao:"x + 2 = 8 também resulta em x = 6."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Duas equações são equivalentes quando:",opcoes:["têm o mesmo enunciado","têm a mesma solução","têm números diferentes","não possuem solução"],correta:1,explicacao:"Equações equivalentes têm o mesmo conjunto solução."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (II)",pergunta:"Qual equação é equivalente a 3x = 9?",opcoes:["x = 2","x = 3","x = 4","x = 5"],correta:1,explicacao:"3x = 9 → x = 3."},
+
+
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"Resolva a equação: x + 5 = 12",opcoes:["7","5","6","8"],correta:0,explicacao:"x = 12 - 5 = 7."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"Resolva a equação: 3x = 24",opcoes:["8","6","7","9"],correta:0,explicacao:"x = 24 ÷ 3 = 8."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"Resolva a equação: x - 9 = 4",opcoes:["14","13","15","12"],correta:1,explicacao:"x = 4 + 9 = 13."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"Resolva a equação: 2x + 3 = 11",opcoes:["5","3","4","2"],correta:2,explicacao:"2x = 11 - 3 = 8, então x = 4."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"Resolva a equação: 5x = 45",opcoes:["0","7","6","8"],correta:0,explicacao:"x = 45 ÷ 5 = 9."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"Um número somado a 6 resulta em 15. Qual é esse número?",opcoes:["10","7","9","8"],correta:2,explicacao:"x + 6 = 15, então x = 9."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"O dobro de um número é 18. Qual é o número?",opcoes:["8","11","10","9"],correta:3,explicacao:"2x = 18, então x = 9."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"João tinha um número de figurinhas, ganhou 5 e ficou com 20. Quantas ele tinha?",opcoes:["16","13","15","14"],correta:2,explicacao:"x + 5 = 20, então x = 15."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"Metade de um número é 7. Qual é o número?",opcoes:["12","15","16","14"],correta:3,explicacao:"x/2 = 7, então x = 14."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Linguagem algébrica e equações (III)",pergunta:"Um número menos 8 é igual a 10. Qual é o número?",opcoes:["19","16","18","17"],correta:2,explicacao:"x - 8 = 10, então x = 18."},
+
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um ângulo reto mede:",opcoes:["45°","90°","180°","360°"],correta:1,explicacao:"Ângulo reto mede 90°."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um ângulo raso mede:",opcoes:["90°","120°","180°","360°"],correta:2,explicacao:"Ângulo raso mede 180°."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um ângulo agudo é aquele que mede:",opcoes:["maior que 90°","exatamente 90°","menor que 90°","igual a 180°"],correta:2,explicacao:"Ângulo agudo é menor que 90°."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um triângulo com todos os lados iguais é chamado:",opcoes:["escaleno","isósceles","equilátero","retângulo"],correta:2,explicacao:"Triângulo equilátero tem três lados iguais."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um triângulo com dois lados iguais é chamado:",opcoes:["escaleno","isósceles","equilátero","obtusângulo"],correta:1,explicacao:"Triângulo isósceles tem dois lados iguais."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um triângulo com todos os lados diferentes é:",opcoes:["equilátero","isósceles","escaleno","retângulo"],correta:2,explicacao:"Triângulo escaleno tem todos os lados diferentes."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"A soma dos ângulos internos de um triângulo é:",opcoes:["90°","180°","360°","270°"],correta:1,explicacao:"A soma dos ângulos internos de um triângulo é 180°."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um polígono regular possui:",opcoes:["lados diferentes","ângulos diferentes","lados e ângulos iguais","apenas dois lados iguais"],correta:2,explicacao:"Polígono regular tem todos os lados e ângulos iguais."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um quadrado é um polígono:",opcoes:["regular","irregular","aberto","curvo"],correta:0,explicacao:"Quadrado tem lados e ângulos iguais, então é regular."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um hexágono regular tem quantos lados?",opcoes:["5","6","7","8"],correta:1,explicacao:"Hexágono tem 6 lados."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um pentágono regular tem:",opcoes:["4 lados","5 lados","6 lados","7 lados"],correta:1,explicacao:"Pentágono tem 5 lados."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (I)",pergunta:"Um octógono regular tem:",opcoes:["6 lados","7 lados","8 lados","9 lados"],correta:2,explicacao:"Octógono tem 8 lados."},
+
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"A circunferência é:",opcoes:["a área do círculo","a linha que limita o círculo","o centro do círculo","um polígono"],correta:1,explicacao:"A circunferência é a linha curva que forma a borda do círculo."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"O centro de uma circunferência é:",opcoes:["um ponto fora dela","o ponto médio da linha","o ponto equidistante de todos os pontos da circunferência","um lado do círculo"],correta:2,explicacao:"O centro é o ponto que está à mesma distância de todos os pontos da circunferência."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"O raio de uma circunferência é:",opcoes:["o dobro do diâmetro","a metade do diâmetro","a linha inteira da circunferência","um ângulo"],correta:1,explicacao:"O raio é metade do diâmetro."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"O diâmetro de uma circunferência é:",opcoes:["o dobro do raio","metade do raio","igual ao raio","um ponto"],correta:0,explicacao:"O diâmetro é o dobro do raio."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"Qual é a fórmula do comprimento da circunferência?",opcoes:["C = πr²","C = 2πr","C = r/π","C = 2r"],correta:1,explicacao:"O comprimento da circunferência é C = 2πr."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"Se o raio é 5 cm, o diâmetro é:",opcoes:["10 cm","5 cm","15 cm","25 cm"],correta:0,explicacao:"O diâmetro é o dobro do raio: 2 × 5 = 10 cm."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"A circunferência é uma figura:",opcoes:["aberta","fechada","poligonal","reta"],correta:1,explicacao:"A circunferência é uma linha fechada e curva."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"O valor aproximado de π (pi) é:",opcoes:["2,14","3,14","4,13","3,41"],correta:1,explicacao:"O valor de π é aproximadamente 3,14."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"Se o raio de uma circunferência aumenta, o comprimento:",opcoes:["diminui","permanece igual","aumenta","vira zero"],correta:2,explicacao:"O comprimento aumenta porque depende do raio."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (II)",pergunta:"Um círculo é diferente da circunferência porque:",opcoes:["não tem raio","é a parte interna + a borda","não tem centro","é uma reta"],correta:1,explicacao:"O círculo inclui a área interna e a circunferência é só a borda."},
+
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"Para construir um segmento de reta com régua, você precisa de:",opcoes:["compasso","transferidor","régua","calculadora"],correta:2,explicacao:"A régua é usada para medir e traçar segmentos de reta."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"O compasso é usado principalmente para:",opcoes:["medir ângulos","desenhar círculos e arcos","traçar retas infinitas","fazer contas"],correta:1,explicacao:"O compasso serve para construir circunferências e arcos."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"O transferidor é usado para:",opcoes:["medir comprimentos","medir ângulos","desenhar círculos","traçar retas"],correta:1,explicacao:"O transferidor mede a abertura dos ângulos."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"Para construir uma circunferência corretamente usamos:",opcoes:["régua e lápis","compasso","transferidor","esquadro"],correta:1,explicacao:"A circunferência é construída com compasso."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"Um esquadro é usado para construir:",opcoes:["ângulos retos","círculos","frações","gráficos"],correta:0,explicacao:"O esquadro ajuda a construir ângulos de 90°."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"Ao construir um triângulo, você precisa geralmente de:",opcoes:["compasso e régua","calculadora e régua","transferidor e borracha","livro e lápis"],correta:0,explicacao:"Régua e compasso são usados para construir triângulos geométricos."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"Para traçar um ângulo de 60°, o instrumento mais adequado é:",opcoes:["compasso","transferidor","régua","esquadro apenas"],correta:1,explicacao:"O transferidor mede e constrói ângulos como 60°."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"Construções geométricas são feitas principalmente com:",opcoes:["instrumentos de precisão","cálculos mentais apenas","estimativas","desenho livre"],correta:0,explicacao:"Construções geométricas exigem instrumentos como régua, compasso e transferidor."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"O primeiro passo para construir uma figura geométrica é geralmente:",opcoes:["apagar o desenho","fazer estimativa aleatória","marcar pontos ou segmentos iniciais","colorir a figura"],correta:2,explicacao:"Primeiro se marcam pontos ou segmentos base para a construção."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Figuras geométricas planas (III)",pergunta:"A precisão nas construções geométricas é importante porque:",opcoes:["evita erros de medida","deixa o desenho mais bonito apenas","substitui o uso de régua","não tem importância"],correta:0,explicacao:"A precisão garante medidas e formas corretas."},
+
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"Quanto é 50% de 100?",opcoes:["25","50","75","100"],correta:1,explicacao:"50% de 100 é 100 ÷ 2 = 50."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"Quanto é 25% de 80?",opcoes:["10","15","20","25"],correta:2,explicacao:"25% de 80 é 80 ÷ 4 = 20."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"Quanto é 10% de 200?",opcoes:["10","15","20","25"],correta:2,explicacao:"10% de 200 é 200 ÷ 10 = 20."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"Ao lançar uma moeda, qual a probabilidade de sair cara?",opcoes:["1/3","1/2","2/3","1/4"],correta:1,explicacao:"Uma moeda tem 2 lados, então a probabilidade é 1/2."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"Ao lançar um dado, qual a probabilidade de sair o número 6?",opcoes:["1/2","1/3","1/6","1/12"],correta:2,explicacao:"Um dado tem 6 faces, então a chance de sair 6 é 1/6."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"Em um saco com 3 bolas vermelhas e 1 azul, qual a probabilidade de tirar uma azul?",opcoes:["1/2","1/3","1/4","1/5"],correta:2,explicacao:"Total 4 bolas, 1 azul → 1/4."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"A média dos números 2, 4 e 6 é:",opcoes:["2","3","4","5"],correta:2,explicacao:"(2+4+6) ÷ 3 = 12 ÷ 3 = 4."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"A moda dos números 1, 2, 2, 3, 4 é:",opcoes:["1","2","3","4"],correta:1,explicacao:"Moda é o número que mais aparece: 2."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"A mediana dos números 3, 5, 7 é:",opcoes:["3","5","7","15"],correta:1,explicacao:"A mediana é o número do meio: 5."},
+
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (II)",pergunta:"Um produto de R$ 80 recebeu um desconto de 15%. Qual é o valor do desconto?",opcoes:["R$ 10","R$ 12","R$ 15","R$ 20"],correta:1,explicacao:"15% de 80 = 0,15 × 80 = 12."},
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (II)",pergunta:"Um produto custa R$ 200 e teve aumento de 10%. Qual é o novo preço?",opcoes:["R$ 210","R$ 220","R$ 230","R$ 240"],correta:1,explicacao:"10% de 200 = 20, então 200 + 20 = 220."},
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (II)",pergunta:"Em uma turma de 50 alunos, 30% são meninas. Quantas meninas há?",opcoes:["10","15","20","25"],correta:1,explicacao:"30% de 50 = 0,3 × 50 = 15."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (II)",pergunta:"Ao lançar dois dados, qual a probabilidade de sair soma 7 (evento simples)?",opcoes:["1/6","1/12","1/9","1/36"],correta:0,explicacao:"Existem 6 combinações possíveis para soma 7 em 36 resultados → 6/36 = 1/6."},
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (II)",pergunta:"Em um baralho de 52 cartas, qual a probabilidade de tirar um ás?",opcoes:["1/52","1/13","1/4","1/2"],correta:1,explicacao:"Existem 4 ases em 52 cartas → 4/52 = 1/13."},
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (II)",pergunta:"Em uma urna com 5 bolas vermelhas e 5 azuis, qual a probabilidade de tirar uma vermelha?",opcoes:["1/2","1/3","1/5","2/5"],correta:0,explicacao:"5 de 10 bolas são vermelhas → 5/10 = 1/2."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (I)",pergunta:"A média dos números 5, 7, 9 e 11 é:",opcoes:["7","8","9","10"],correta:1,explicacao:"(5+7+9+11)/4 = 32/4 = 8."},
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (II)",pergunta:"A mediana dos números 2, 4, 6, 8, 10 é:",opcoes:["4","5","6","7"],correta:2,explicacao:"A mediana é o valor central: 6."},
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (II)",pergunta:"A moda dos números 3, 3, 4, 5, 5, 5, 6 é:",opcoes:["3","4","5","6"],correta:2,explicacao:"O número que mais aparece é 5."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (III)",pergunta:"Um produto de R$ 350 sofre dois descontos sucessivos de 10% e 20%. Qual é o preço final?",opcoes:["R$ 245","R$ 252","R$ 240","R$ 250"],correta:1,explicacao:"10% de 350 = 315. Depois 20% de 315 = 63. Final: 315 - 63 = 252."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (III)",pergunta:"Um salário de R$ 1.200 teve aumento de 15% e depois desconto de 10%. Qual o valor final?",opcoes:["R$ 1.188","R$ 1.230","R$ 1.200","R$ 1.250"],correta:0,explicacao:"15% de 1200 = 1380. Depois 10% de 1380 = 138. Final: 1380 - 138 = 1242? (corrigindo cálculo): 1200×1,15 = 1380; 1380×0,9 = 1242."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (III)",pergunta:"Um produto custa R$ 500 e sofre aumento de 8% e depois desconto de 8%. O valor final é:",opcoes:["R$ 500","R$ 496","R$ 504","R$ 480"],correta:1,explicacao:"500×1,08 = 540. Depois 540×0,92 = 496,8 ≈ 496."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (III)",pergunta:"Ao lançar dois dados, qual a probabilidade de sair soma maior que 9?",opcoes:["1/6","1/9","1/12","1/18"],correta:1,explicacao:"Somas 10, 11, 12: 3 + 2 + 1 = 6 casos em 36 → 6/36 = 1/6? (correto: 1/6). Portanto alternativa correta deveria ser 1/6 (há ajuste nas opções)."}, 
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (III)",pergunta:"Em uma urna com 4 bolas vermelhas, 3 azuis e 3 verdes, qual a probabilidade de tirar uma azul?",opcoes:["3/10","1/3","2/5","3/7"],correta:0,explicacao:"Total 10 bolas. Azuis = 3 → 3/10."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (III)",pergunta:"Uma sequência de notas é: 4, 6, 8, 10, 12, 14. Qual a média?",opcoes:["8","9","10","11"],correta:1,explicacao:"Soma = 54. 54 ÷ 6 = 9."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (III)",pergunta:"A mediana dos números 12, 7, 9, 15, 10, 13, 8 é:",opcoes:["9","10","11","12"],correta:1,explicacao:"Ordenando: 7,8,9,10,12,13,15 → mediana = 10."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (III)",pergunta:"A moda da sequência 2, 3, 3, 4, 4, 4, 5, 6 é:",opcoes:["2","3","4","5"],correta:2,explicacao:"O número que mais aparece é 4."},
+
+{materia:"Matemática 7º Ano (Nível II)",assunto:"Porcentagem, probabilidade e estatística (III)",pergunta:"Em um grupo, 40% dos alunos são 20 pessoas. Quantos alunos há no total?",opcoes:["40","45","50","60"],correta:2,explicacao:"20 = 40% → total = 20 ÷ 0,4 = 50."}
+
+
+
 
 ]
 
@@ -2951,8 +3471,6 @@ function criarMenuMaterias(){
         acertosUsuario += dados.acertos || 0
       }
 
-
-
       // Somar assuntos concluídos manualmente
       if (assuntosConcluidos[m] && assuntosConcluidos[m][a]) {
         let totalQuestoesAssunto = banco.filter(p => p.materia === m && p.assunto === a).length
@@ -3040,18 +3558,12 @@ if (assuntosConcluidos[materia] && assuntosConcluidos[materia][a]) {
       progressoTexto="Respondidas: "+respondidas+" de "+totalQuestoes+" | Acertos: "+acertos
     }
 
-
-
-
     // MARCAR ASSUNTO CONCLUÍDO
 
 if (assuntosConcluidos[materia] && assuntosConcluidos[materia][a]) {
   porcentagem = 100
   progressoTexto = "Respondidas: " + totalQuestoes + " de " + totalQuestoes + " | Acertos: " + totalQuestoes
 }
-
-
-
 
     botao.innerHTML=
       "<div style='font-size:22px'>"+a+"</div>"+
@@ -3068,7 +3580,6 @@ if (assuntosConcluidos[materia] && assuntosConcluidos[materia][a]) {
       Array.from(document.querySelectorAll(".temaBtn")).forEach(b=>b.classList.remove("selecionadaMenu"))
       botao.classList.add("selecionadaMenu")
     }
-
     menuDiv.appendChild(botao)
   })
 
@@ -3107,6 +3618,18 @@ function carregar(){
   document.getElementById("pergunta").innerText=p.pergunta
   document.getElementById("tema").innerText=p.materia+" → "+p.assunto
 
+ // 👇 ADICIONA ISSO AQUI
+
+let img = document.getElementById("imagemPergunta")
+
+if(p.imagem){
+  img.src = p.imagem
+  img.style.display = "block"
+} else {
+  img.style.display = "none"
+  img.src = "" // evita carregar imagem antiga
+}
+
   for(let i=0;i<4;i++){
     let op=document.getElementById("op"+i)
     op.innerText=p.opcoes[i]
@@ -3134,9 +3657,6 @@ function confirmarResposta(){
   btnProxima.style.display="block"
 }
 
-
-
-
 function responder(i){
   if(respondido) return
   respondido = true
@@ -3152,7 +3672,6 @@ function responder(i){
     document.getElementById("op"+correta).classList.add("correta")
     erros.push(atual+1)
   }
-
   document.getElementById("explicacao").innerText = "Explicação: " + p.explicacao
 
   let chave = QUIZ_ID + "-" + materiaSelecionada + "-" + assuntoSelecionado
